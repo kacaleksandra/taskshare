@@ -30,7 +30,7 @@ function SignInPage() {
   }
 
   return (
-    <div className='w-full h-screen flex flex-col justify-center lg:grid lg:grid-cols-2 xl:min-h-[800px]'>
+    <div className='w-full flex flex-col justify-center lg:grid lg:grid-cols-2 h-[95vh]'>
       <div className='flex items-center justify-center py-12'>
         <div className='mx-auto grid w-[350px] gap-6'>
           <div className='grid gap-2 text-center'>

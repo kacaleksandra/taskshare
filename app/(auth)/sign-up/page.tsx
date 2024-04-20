@@ -68,7 +68,7 @@ function SignUpPage() {
   }
 
   return (
-    <div className='h-screen flex items-center justify-center mx-3'>
+    <div className='flex items-center justify-center mx-3 my-16'>
       <Card>
         <CardHeader>
           <CardTitle className='text-xl'>Sign Up</CardTitle>
