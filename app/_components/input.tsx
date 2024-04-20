@@ -1,9 +1,10 @@
 import { cn } from '@/utils/cn-helper';
-import { InputHTMLAttributes, forwardRef } from 'react';
+import * as React from 'react';
 
-export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {}
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
