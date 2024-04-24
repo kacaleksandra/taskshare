@@ -10,7 +10,7 @@ const noto_sans = Noto_Sans({
 
 export const metadata: Metadata = {
   title: 'TaskShare',
-  description: 'Your plarform for task sharing',
+  description: 'Your platform for task sharing',
 };
 
 export default function RootLayout({
