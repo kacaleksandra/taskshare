@@ -56,7 +56,7 @@ function SignInPage() {
                   name='password'
                   render={({ field }) => (
                     <FormItemWrapper label='Password' className='my-4'>
-                      <Input {...field} />
+                      <Input {...field} type='password' />
                     </FormItemWrapper>
                   )}
                 />

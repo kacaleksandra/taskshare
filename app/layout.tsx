@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Noto_Sans } from 'next/font/google';
 
 import { NavigationTopMenu } from './_components/navigation-top-menu';
+import { Toaster } from './_components/toaster';
 import './globals.css';
 
 const noto_sans = Noto_Sans({
@@ -32,6 +33,7 @@ export default function RootLayout({
             </div>
           </div>
         </div>
+        <Toaster />
       </body>
     </html>
   );
