@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils/cn-helper';
+import { cn } from '@/app/_utils/cn-helper';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { type VariantProps, cva } from 'class-variance-authority';
 import { X } from 'lucide-react';

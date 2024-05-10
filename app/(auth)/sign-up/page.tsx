@@ -13,13 +13,16 @@ import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
 import { Label } from '@/app/_components/label';
 import { Switch } from '@/app/_components/switch';
-import { toast } from '@/utils/use-toast';
+import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { registerUserClient } from './_api/client';
 
 const LABEL_STYLES = {
   selected: 'text-sm px-2 font-normal font-semibold',
@@ -27,22 +30,23 @@ const LABEL_STYLES = {
 };
 
 function SignUpPage() {
+  const router = useRouter();
   const [role, setRole] = useState<boolean>(false);
 
   const formSchema = z
     .object({
-      firstName: z.string().min(1, { message: 'First name is required' }),
-      lastName: z.string().min(1, { message: 'Last name is required' }),
+      name: z.string().min(1, { message: 'First name is required' }),
+      lastname: z.string().min(1, { message: 'Last name is required' }),
       email: z.string().email().min(1, { message: 'Invalid email' }),
       password: z
         .string()
         .min(8, { message: 'Password must be at least 8 characters' }),
-      confirmPassword: z.string(),
-      role: z.enum(['student', 'teacher']),
+      confirmedPassword: z.string(),
+      role: z.number(),
     })
     .refine(
       (values) => {
-        return values.password === values.confirmPassword;
+        return values.password === values.confirmedPassword;
       },
       {
         message: 'Passwords must match.',
@@ -53,32 +57,31 @@ function SignUpPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      name: '',
+      lastname: '',
       email: '',
       password: '',
-      confirmPassword: '',
-      role: 'student',
+      confirmedPassword: '',
+      role: 3,
     },
   });
 
-  // const { mutate: register } = useMutation({
-  //   mutationFn: registerInvitedUserClient,
-  //   onError: ({ message }) => {
-  //     toast(<ToastContent>{message}</ToastContent>);
-  //   },
-  //   onSuccess: async ({ session, softwareToken, email }) => {
-  //     sessionStorage.setItem('register-email', email);
-  //     sessionStorage.setItem('register-session', session);
-  //     await router.push(routeGenerators.signUpInvitedMFA(softwareToken, email));
-  //   },
-  // });
+  const { mutate: register } = useMutation({
+    mutationFn: registerUserClient,
+    onError: () => {
+      toast({ description: 'Something went wrong. Please try again.' });
+    },
+    onSuccess: async () => {
+      await router.push('/success');
+    },
+  });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const roleValue = role ? 'teacher' : 'student';
-    const dataToSend = { ...values, role: roleValue };
-    // to be implemented with backend
+    const roleValue = role ? 2 : 3; //2 for teacher, 3 for student
+    const dataToSend = { ...values, roleId: roleValue };
+
     console.log(dataToSend);
+    register(dataToSend);
   }
 
   return (
@@ -97,7 +100,7 @@ function SignUpPage() {
                 <div className='grid grid-cols-2 gap-4'>
                   <FormField
                     control={form.control}
-                    name='firstName'
+                    name='name'
                     render={({ field }) => (
                       <FormItemWrapper label='First name'>
                         <Input {...field} />
@@ -106,7 +109,7 @@ function SignUpPage() {
                   />
                   <FormField
                     control={form.control}
-                    name='lastName'
+                    name='lastname'
                     render={({ field }) => (
                       <FormItemWrapper label='Last name'>
                         <Input {...field} />
@@ -136,7 +139,7 @@ function SignUpPage() {
                 />
                 <FormField
                   control={form.control}
-                  name='confirmPassword'
+                  name='confirmedPassword'
                   render={({ field }) => (
                     <FormItemWrapper label='Confirm password' className='my-4'>
                       <Input {...field} type='password' />

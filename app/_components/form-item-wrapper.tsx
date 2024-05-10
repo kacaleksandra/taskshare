@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn-helper';
+import { cn } from '@/app/_utils/cn-helper';
 import type { ReactNode } from 'react';
 
 import { FormControl, FormItem, FormLabel, FormMessage } from './form';

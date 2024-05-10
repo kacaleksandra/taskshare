@@ -1,6 +1,6 @@
 'use client';
 
-import { useToast } from '@/utils/use-toast';
+import { useToast } from '@/app/_utils/use-toast';
 
 import {
   Toast,
