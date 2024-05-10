@@ -4,13 +4,20 @@ import { Button } from '@/app/_components/button';
 import { Form, FormField } from '@/app/_components/form';
 import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
+import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { loginUserClient } from './_api/client';
+
 function SignInPage() {
+  const router = useRouter();
+
   const formSchema = z.object({
     email: z.string().email().min(1, { message: 'Invalid email' }),
     password: z.string().min(1, { message: 'Password is required' }),
@@ -24,9 +31,19 @@ function SignInPage() {
     },
   });
 
+  const { mutate: login } = useMutation({
+    mutationFn: loginUserClient,
+    onError: () => {
+      toast({ description: 'Something went wrong. Please try again.' });
+    },
+    onSuccess: async (token) => {
+      localStorage.setItem('token', token);
+      await router.push('/dashboard');
+    },
+  });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // to be implemented with backend
-    console.log(values);
+    login(values);
   }
 
   return (
@@ -56,7 +73,7 @@ function SignInPage() {
                   name='password'
                   render={({ field }) => (
                     <FormItemWrapper label='Password' className='my-4'>
-                      <Input {...field} />
+                      <Input {...field} type='password' />
                     </FormItemWrapper>
                   )}
                 />

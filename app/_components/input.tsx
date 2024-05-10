@@ -1,4 +1,4 @@
-import { cn } from '@/utils/cn-helper';
+import { cn } from '@/app/_utils/cn-helper';
 import * as React from 'react';
 
 export interface InputProps

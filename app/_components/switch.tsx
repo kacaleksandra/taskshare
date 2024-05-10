@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils/cn-helper';
+import { cn } from '@/app/_utils/cn-helper';
 import * as SwitchPrimitives from '@radix-ui/react-switch';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
