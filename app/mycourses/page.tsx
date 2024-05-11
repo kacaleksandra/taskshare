@@ -92,9 +92,7 @@ const Page: React.FC = () => {
     <>
       <div className='max-w-full'>
         <div className='max-w-full items-center flex flex-col'>
-          <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>
-            All Courses
-          </h2>
+          <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>My Courses</h2>
           <form className='w-4/5 flex' onSubmit={handleSubmit}>
             <Input type='text' placeholder='Search' name='search' />
             <Button type='submit'>Search</Button>

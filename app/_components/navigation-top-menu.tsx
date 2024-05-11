@@ -12,13 +12,13 @@ export function NavigationTopMenu() {
     <nav className='flex flex-row py-1 px-4 shadow-md bg-gradient-to-tl from-blue-500 to-blue-600'>
       <div className='pl-5 flex flex-grow gap-10'>
         <Link
-          href='/'
+          href='/dashboard'
           className='text-white text-sm sm:text-base flex items-center hover:bg-blue-600 rounded-md px-2 py-1'
         >
           <LayoutDashboardIcon className='pr-1 hidden sm:block' /> Dashboard
         </Link>
         <Link
-          href='/'
+          href='/mycourses'
           className='text-white text-sm sm:text-base flex items-center hover:bg-blue-600 rounded-md px-2 py-1'
         >
           <FileStackIcon className='pr-1 hidden sm:block' />
