@@ -7,14 +7,13 @@ import CourseMini from '../_components/courseMini';
 import { Input } from '../_components/input';
 import { useStoredUserInfo } from '../_components/navigation-top-menu';
 import { useRouter } from 'next/navigation';
-import { CourseMiniProps, getAllCourses } from './_api/client';
+import { CourseMiniProps, getPendingCourses } from './_api/client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from '../_utils/use-toast';
-import { BIG_PAGE_SIZE } from '@/constants';
+import { SMALL_PAGE_SIZE } from '@/constants';
 
 
-
-const Page: React.FC = () => {
+const Pending: React.FC = () => {
   const [courses, setCourses] = useState<CourseMiniProps[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -29,12 +28,11 @@ const Page: React.FC = () => {
       }, 1000);
   }, []);
   useEffect(() => {
-    console.log('Page number changed to:', pageNumber);
-    reloadCourses({pageSize: BIG_PAGE_SIZE, pageNumber: pageNumber, searchParams: searchParams});
+    reloadCourses({pageSize: SMALL_PAGE_SIZE, pageNumber: pageNumber, searchParams: searchParams});
   }, [pageNumber]);
 
   const { mutate: reloadCourses } = useMutation({
-    mutationFn: getAllCourses,
+    mutationFn: getPendingCourses,
     onError: () => {
       toast({ description: 'Something went wrong. Please try again.' });
     },
@@ -49,7 +47,7 @@ const Page: React.FC = () => {
     console.log(event.currentTarget.search.value);
     setPageNumber(1);
     searchParams = event.currentTarget.search.value;
-    reloadCourses({pageSize: BIG_PAGE_SIZE, pageNumber: 1, searchParams: event.currentTarget.search.value});
+    reloadCourses({pageSize: SMALL_PAGE_SIZE, pageNumber: 1, searchParams: event.currentTarget.search.value});
   };
 
   return (
@@ -57,7 +55,7 @@ const Page: React.FC = () => {
       <div className='max-w-full'>
         <div className='max-w-full items-center flex flex-col'>
           <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>
-            All Courses
+            My Pending Courses
           </h2>
           <form className='w-4/5 flex' onSubmit={handleSubmit}>
             <Input type='text' placeholder='Search' name='search' />
@@ -97,4 +95,4 @@ const Page: React.FC = () => {
   );
 };
 
-export default Page;
+export default Pending;

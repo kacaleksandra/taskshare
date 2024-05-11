@@ -17,3 +17,15 @@ export const loginUserClient = async (body: LoginUser) => {
     return res.text();
   }
 };
+
+export const getUserInfo = async () => {
+  const res = await clientFetch('/user/logged', {
+    method: 'GET',
+  });
+
+  if (!res.ok) {
+    throw new Error('User not logged in');
+  } else {
+    return res.json();
+  }
+};

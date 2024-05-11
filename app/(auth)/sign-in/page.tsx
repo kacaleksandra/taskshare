@@ -13,10 +13,12 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { loginUserClient } from './_api/client';
+import { loginUserClient, getUserInfo } from './_api/client';
+import { useStoredUserInfo } from '@/app/_components/navigation-top-menu';
 
 function SignInPage() {
   const router = useRouter();
+  const updateUserInfoStore = useStoredUserInfo(state=>state.update);
 
   const formSchema = z.object({
     email: z.string().email().min(1, { message: 'Invalid email' }),
@@ -37,8 +39,19 @@ function SignInPage() {
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async (token) => {
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
+      await setUserinfo();
       await router.push('/dashboard');
+    },
+  });
+
+  const { mutate: setUserinfo } = useMutation({
+    mutationFn: getUserInfo,
+    onError: () => {
+      toast({ description: 'Something went wrong. Please try again.' });
+    },
+    onSuccess: async (userInfo) => {
+      updateUserInfoStore(userInfo);
     },
   });
 
