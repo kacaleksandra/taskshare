@@ -1,17 +1,24 @@
 'use client';
 
+import { Button } from '@/app/_components/button';
 import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/app/_components/form';
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/app/_components/card';
+import { Form, FormField, FormItem, FormLabel, FormDescription, FormMessage } from '@/app/_components/form';
+import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
+import { Label } from '@/app/_components/label';
+import { Switch } from '@/app/_components/switch';
+import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -44,16 +51,22 @@ const CreateCoursePage: React.FC = () => {
     console.log('Course description:', courseYearStart);
   };
 
-  const form = z.object({
+  const formSchema = z.object({
     username: z.string().min(2, {
       message: 'Username must be at least 2 characters.',
     }),
   });
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      username: '',
+    },
+  });
   return (
     <div>
       <h1>Create Course</h1>
-      <Form {...form}>
+      {/* <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
           <FormField
             control={form.control}
@@ -72,7 +85,7 @@ const CreateCoursePage: React.FC = () => {
             )}
           />
         </form>
-      </Form>
+      </Form> */}
     </div>
   );
 };

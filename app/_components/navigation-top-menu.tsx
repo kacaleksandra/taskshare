@@ -16,7 +16,7 @@ type LoggedUserInfo = {
   roleId: 2 | 3;
 };
 
-type UserInfoStore = {
+export type UserInfoStore = {
   loggedUserInfo: LoggedUserInfo | null;
   clear: () => void;
   update: (userInfo: LoggedUserInfo) => void;
