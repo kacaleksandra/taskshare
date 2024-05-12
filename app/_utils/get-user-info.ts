@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-type LoggedUserInfo = {
+export type LoggedUserInfo = {
   id: number;
   email: string;
   name: string;
@@ -8,7 +8,7 @@ type LoggedUserInfo = {
   roleId: 2 | 3;
 };
 
-type UserInfoStore = {
+export type UserInfoStore = {
   loggedUserInfo: LoggedUserInfo | null;
   clear: () => void;
   update: (userInfo: LoggedUserInfo) => void;
