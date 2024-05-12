@@ -11,13 +11,13 @@ export interface CourseMiniProps {
   iconPath: string;
   approvalStatus: number;
   owner: {
-      id: number;
-      email: string;
-      name: string;
-      lastname: string;
-      roleId: number;
+    id: number;
+    email: string;
+    name: string;
+    lastname: string;
+    roleId: number;
   };
-};
+}
 export type CourseResponse = {
   items: CourseMiniProps[];
   totalPages: number;
@@ -26,13 +26,14 @@ export type CourseResponse = {
   totalItemsCount: number;
 };
 
-
-export const getEnrolledCourses = async (params: FilterParams): Promise<CourseResponse> => {
+export const getEnrolledCourses = async (
+  params: FilterParams,
+): Promise<CourseResponse> => {
   const { searchParams, pageSize, pageNumber } = params;
   const queryParams = new URLSearchParams({
     PageSize: pageSize.toString(),
     PageNumber: pageNumber.toString(),
-    SearchPhrase: searchParams || ''
+    SearchPhrase: searchParams || '',
   });
 
   const res = await clientFetch(`/course/user/enrolled?${queryParams}`, {
@@ -46,12 +47,14 @@ export const getEnrolledCourses = async (params: FilterParams): Promise<CourseRe
   }
 };
 
-export const getPendingCourses = async (params: FilterParams): Promise<CourseResponse> => {
+export const getPendingCourses = async (
+  params: FilterParams,
+): Promise<CourseResponse> => {
   const { searchParams, pageSize, pageNumber } = params;
   const queryParams = new URLSearchParams({
     PageSize: pageSize.toString(),
     PageNumber: pageNumber.toString(),
-    SearchPhrase: searchParams || ''
+    SearchPhrase: searchParams || '',
   });
 
   const res = await clientFetch(`/course/user/pending?${queryParams}`, {

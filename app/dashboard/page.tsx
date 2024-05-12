@@ -1,37 +1,20 @@
 'use client';
 
+import { BIG_PAGE_SIZE } from '@/constants';
+import { useMutation } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '../_components/button';
 import CourseMini from '../_components/courseMini';
 import { Input } from '../_components/input';
-import { useStoredUserInfo } from '../_components/navigation-top-menu';
-import { useRouter } from 'next/navigation';
-import { CourseMiniProps, getAllCourses } from './_api/client';
-import { useMutation } from '@tanstack/react-query';
 import { toast } from '../_utils/use-toast';
-import { BIG_PAGE_SIZE } from '@/constants';
-
-
+import { CourseMiniProps, getAllCourses } from './_api/client';
 
 const Page: React.FC = () => {
   const [courses, setCourses] = useState<CourseMiniProps[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   let searchParams: string = '';
-  const router = useRouter();
-  const loggedUserInfo = useStoredUserInfo(state=>state.loggedUserInfo);
-  useEffect(() => {
-    setTimeout(() => {
-        if (!loggedUserInfo) {
-          router.push('/');
-        }
-      }, 1000);
-  }, []);
-  useEffect(() => {
-    console.log('Page number changed to:', pageNumber);
-    reloadCourses({pageSize: BIG_PAGE_SIZE, pageNumber: pageNumber, searchParams: searchParams});
-  }, [pageNumber]);
 
   const { mutate: reloadCourses } = useMutation({
     mutationFn: getAllCourses,
@@ -44,12 +27,26 @@ const Page: React.FC = () => {
       setTotalPages(response.totalPages);
     },
   });
+
+  useEffect(() => {
+    console.log('Page number changed to:', pageNumber);
+    reloadCourses({
+      pageSize: BIG_PAGE_SIZE,
+      pageNumber: pageNumber,
+      searchParams: searchParams,
+    });
+  }, [pageNumber, reloadCourses, searchParams]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(event.currentTarget.search.value);
     setPageNumber(1);
     searchParams = event.currentTarget.search.value;
-    reloadCourses({pageSize: BIG_PAGE_SIZE, pageNumber: 1, searchParams: event.currentTarget.search.value});
+    reloadCourses({
+      pageSize: BIG_PAGE_SIZE,
+      pageNumber: 1,
+      searchParams: event.currentTarget.search.value,
+    });
   };
 
   return (
@@ -70,7 +67,9 @@ const Page: React.FC = () => {
           ))}
         </div>
         <div className='flex justify-center'>
-          <Button variant={pageNumber > 1 ? 'default' : 'secondary'} className='m-4'
+          <Button
+            variant={pageNumber > 1 ? 'default' : 'secondary'}
+            className='m-4'
             onClick={() => {
               if (pageNumber > 1) {
                 setPageNumber(pageNumber - 1);
@@ -80,9 +79,11 @@ const Page: React.FC = () => {
             ←
           </Button>
           <span className='m-6'>
-          {pageNumber} of {totalPages}
+            {pageNumber} of {totalPages}
           </span>
-          <Button variant={pageNumber < totalPages ? 'default' : 'secondary'} className='m-4'
+          <Button
+            variant={pageNumber < totalPages ? 'default' : 'secondary'}
+            className='m-4'
             onClick={() => {
               if (pageNumber < totalPages) {
                 setPageNumber(pageNumber + 1);

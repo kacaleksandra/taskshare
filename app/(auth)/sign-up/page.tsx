@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -31,6 +31,8 @@ const LABEL_STYLES = {
 
 function SignUpPage() {
   const router = useRouter();
+
+  const [shouldRender, setShouldRender] = useState(false);
   const [role, setRole] = useState<boolean>(false);
 
   const formSchema = z
@@ -80,118 +82,136 @@ function SignUpPage() {
     const roleValue = role ? 2 : 3; //2 for teacher, 3 for student
     const dataToSend = { ...values, roleId: roleValue };
 
-    console.log(dataToSend);
     register(dataToSend);
   }
 
+  useEffect(() => {
+    if (sessionStorage.getItem('token')) {
+      router.push('/dashboard');
+    } else {
+      setShouldRender(true);
+    }
+  }, [router]);
+
   return (
-    <div className='flex items-center justify-center mx-3 my-16'>
-      <Card>
-        <CardHeader>
-          <CardTitle className='text-xl'>Sign Up</CardTitle>
-          <CardDescription>
-            Enter your information to create an account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className='grid gap-4'>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className='grid grid-cols-2 gap-4'>
-                  <FormField
-                    control={form.control}
-                    name='name'
-                    render={({ field }) => (
-                      <FormItemWrapper label='First name'>
-                        <Input {...field} />
-                      </FormItemWrapper>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name='lastname'
-                    render={({ field }) => (
-                      <FormItemWrapper label='Last name'>
-                        <Input {...field} />
-                      </FormItemWrapper>
-                    )}
-                  />
-                </div>
+    shouldRender && (
+      <>
+        <div className='flex items-center justify-center mx-3 my-16'>
+          <Card>
+            <CardHeader>
+              <CardTitle className='text-xl'>Sign Up</CardTitle>
+              <CardDescription>
+                Enter your information to create an account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='grid gap-4'>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <FormField
+                        control={form.control}
+                        name='name'
+                        render={({ field }) => (
+                          <FormItemWrapper label='First name'>
+                            <Input {...field} />
+                          </FormItemWrapper>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='lastname'
+                        render={({ field }) => (
+                          <FormItemWrapper label='Last name'>
+                            <Input {...field} />
+                          </FormItemWrapper>
+                        )}
+                      />
+                    </div>
 
-                <FormField
-                  control={form.control}
-                  name='email'
-                  render={({ field }) => (
-                    <FormItemWrapper label='Email' className='my-4'>
-                      <Input {...field} />
-                    </FormItemWrapper>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='password'
-                  render={({ field }) => (
-                    <FormItemWrapper label='Password'>
-                      <Input {...field} type='password' />
-                    </FormItemWrapper>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name='confirmedPassword'
-                  render={({ field }) => (
-                    <FormItemWrapper label='Confirm password' className='my-4'>
-                      <Input {...field} type='password' />
-                    </FormItemWrapper>
-                  )}
-                />
-                <div className='flex flex-row items-center my-5'>
-                  <Label htmlFor='role' className='text-sm'>
-                    What is your role?
-                  </Label>
-                  <div className='flex flex-row grow items-center justify-center'>
-                    <Label
-                      htmlFor='role'
-                      className={
-                        role ? LABEL_STYLES.unselected : LABEL_STYLES.selected
-                      }
-                      onClick={() => setRole(true)}
-                    >
-                      Student
-                    </Label>
-                    <Switch
-                      id='role'
-                      checked={role}
-                      onCheckedChange={() => setRole(!role)}
+                    <FormField
+                      control={form.control}
+                      name='email'
+                      render={({ field }) => (
+                        <FormItemWrapper label='Email' className='my-4'>
+                          <Input {...field} />
+                        </FormItemWrapper>
+                      )}
                     />
-                    <Label
-                      htmlFor='role'
-                      className={
-                        role ? LABEL_STYLES.selected : LABEL_STYLES.unselected
-                      }
-                      onClick={() => setRole(false)}
-                    >
-                      Teacher
-                    </Label>
-                  </div>
-                </div>
-                <Button type='submit' className='w-full mt-2'>
-                  Create an account
-                </Button>
-              </form>
-            </Form>
-          </div>
 
-          <div className='mt-4 text-center text-sm'>
-            Already have an account?{' '}
-            <Link href='/sign-in' className='underline'>
-              Sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+                    <FormField
+                      control={form.control}
+                      name='password'
+                      render={({ field }) => (
+                        <FormItemWrapper label='Password'>
+                          <Input {...field} type='password' />
+                        </FormItemWrapper>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='confirmedPassword'
+                      render={({ field }) => (
+                        <FormItemWrapper
+                          label='Confirm password'
+                          className='my-4'
+                        >
+                          <Input {...field} type='password' />
+                        </FormItemWrapper>
+                      )}
+                    />
+                    <div className='flex flex-row items-center my-5'>
+                      <Label htmlFor='role' className='text-sm'>
+                        What is your role?
+                      </Label>
+                      <div className='flex flex-row grow items-center justify-center'>
+                        <Label
+                          htmlFor='role'
+                          className={
+                            role
+                              ? LABEL_STYLES.unselected
+                              : LABEL_STYLES.selected
+                          }
+                          onClick={() => setRole(true)}
+                        >
+                          Student
+                        </Label>
+                        <Switch
+                          id='role'
+                          checked={role}
+                          onCheckedChange={() => setRole(!role)}
+                        />
+                        <Label
+                          htmlFor='role'
+                          className={
+                            role
+                              ? LABEL_STYLES.selected
+                              : LABEL_STYLES.unselected
+                          }
+                          onClick={() => setRole(false)}
+                        >
+                          Teacher
+                        </Label>
+                      </div>
+                    </div>
+                    <Button type='submit' className='w-full mt-2'>
+                      Create an account
+                    </Button>
+                  </form>
+                </Form>
+              </div>
+
+              <div className='mt-4 text-center text-sm'>
+                Already have an account?{' '}
+                <Link href='/sign-in' className='underline'>
+                  Sign in
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </>
+    )
   );
 }
 

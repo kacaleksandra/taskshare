@@ -1,9 +1,10 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import type { Metadata } from 'next';
 import { Noto_Sans } from 'next/font/google';
 
 import { NavigationTopMenu } from './_components/navigation-top-menu';
 import { Toaster } from './_components/toaster';
+import CheckAuth from './_utils/check-auth';
 import ReactQueryProvider from './_utils/react-query-provider';
 import './globals.css';
 
@@ -29,10 +30,12 @@ export default function RootLayout({
         <ReactQueryProvider>
           <div className='flex flex-col h-screen'>
             <NavigationTopMenu />
-            <div className='grow'>{children}</div>
+            <div className='grow'>
+              <CheckAuth>{children}</CheckAuth>
+            </div>
             <div className='w-full bg-gradient-to-tr from-blue-700 to-blue-500 h-12'>
-              <div className='flex justify-center items-center h-full'>
-                <p className='text-white text-sm'>
+              <div className='flex justify-center items-center h-full py-4 '>
+                <p className='text-white text-sm '>
                   &copy; TaskShare {new Date().getFullYear()}
                 </p>
               </div>
