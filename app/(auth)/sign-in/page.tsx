@@ -4,6 +4,7 @@ import { Button } from '@/app/_components/button';
 import { Form, FormField } from '@/app/_components/form';
 import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
+import { UseStoredUserInfo } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -13,12 +14,11 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { loginUserClient, getUserInfo } from './_api/client';
-import { useStoredUserInfo } from '@/app/_components/navigation-top-menu';
+import { getUserInfo, loginUserClient } from './_api/client';
 
 function SignInPage() {
   const router = useRouter();
-  const updateUserInfoStore = useStoredUserInfo(state=>state.update);
+  const updateUserInfoStore = UseStoredUserInfo((state) => state.update);
 
   const formSchema = z.object({
     email: z.string().email().min(1, { message: 'Invalid email' }),
