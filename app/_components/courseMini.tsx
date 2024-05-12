@@ -12,6 +12,7 @@ import {
 } from '@/app/_components/card';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+
 import { CourseMiniProps } from '../dashboard/_api/client';
 
 const CourseMini: React.FC<CourseMiniProps> = ({
@@ -26,7 +27,9 @@ const CourseMini: React.FC<CourseMiniProps> = ({
     <Card className='my-2' onClick={() => router.push(`/course/${id}`)}>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>{owner.name} {owner.lastname}</CardDescription>
+        <CardDescription>
+          {owner.name} {owner.lastname}
+        </CardDescription>
       </CardHeader>
       <CardFooter>
         {/* <CardDescription> */}

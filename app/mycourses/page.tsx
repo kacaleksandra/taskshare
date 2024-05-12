@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import Enrolled from './enrolled';
-import Pending from './pending';
+import Enrolled from './_components/enrolled';
+import Pending from './_components/pending';
 
 const Page: React.FC = () => {
   return (

@@ -5,12 +5,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
-import { Button } from '../_components/button';
-import CourseMini from '../_components/courseMini';
-import { Input } from '../_components/input';
-import { UseStoredUserInfo } from '../_utils/get-user-info';
-import { toast } from '../_utils/use-toast';
-import { CourseMiniProps, getPendingCourses } from './_api/client';
+import { Button } from '../../_components/button';
+import CourseMini from '../../_components/courseMini';
+import { Input } from '../../_components/input';
+import { UseStoredUserInfo } from '../../_utils/get-user-info';
+import { toast } from '../../_utils/use-toast';
+import { CourseMiniProps, getPendingCourses } from '../_api/client';
 
 const Pending: React.FC = () => {
   const [courses, setCourses] = useState<CourseMiniProps[]>([]);

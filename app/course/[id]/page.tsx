@@ -1,14 +1,19 @@
 'use client';
 
-import { Button } from "@/app/_components/button";
-import { UserInfoStore, useStoredUserInfo } from "@/app/_components/navigation-top-menu";
-import { TEACHER_ROLE_ID } from "@/constants";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Button } from '@/app/_components/button';
+import {
+  UserInfoStore,
+  useStoredUserInfo,
+} from '@/app/_components/navigation-top-menu';
+import { TEACHER_ROLE_ID } from '@/constants';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const loggedUserInfo = useStoredUserInfo((state :UserInfoStore)=>state.loggedUserInfo);
+  const loggedUserInfo = useStoredUserInfo(
+    (state: UserInfoStore) => state.loggedUserInfo,
+  );
   const [tasks, setTasks] = useState([]);
   return (
     <>
@@ -16,9 +21,16 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className='max-w-full items-center flex flex-col'>
           <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>
             Course Name
-            {loggedUserInfo?.roleId === TEACHER_ROLE_ID &&
-             <Button variant={'destructive'} onClick={()=>{router.push(`/course/edit/${params.id}`)}}>Edit</Button>
-            }
+            {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+              <Button
+                variant={'destructive'}
+                onClick={() => {
+                  router.push(`/course/edit/${params.id}`);
+                }}
+              >
+                Edit
+              </Button>
+            )}
           </h2>
           {tasks.map((task) => (
             <div className='w-4/5' key={task}>
@@ -51,5 +63,5 @@ export default function Page({ params }: { params: { id: string } }) {
         </div> */}
       </div>
     </>
-  )
+  );
 }
