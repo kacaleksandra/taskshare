@@ -9,11 +9,9 @@ export interface AssignmentMiniProps {
 }
 export type AssigmentResponse = AssignmentMiniProps;
 
-
 export const getAssignmentInfo = async (
   assignmentID: number,
 ): Promise<AssigmentResponse> => {
-
   const res = await clientFetch(`/assignment/${assignmentID}`, {
     method: 'GET',
   });
@@ -31,7 +29,7 @@ export type CourseFullInfo = {
   iconPath: string;
   approvalStatus: number;
   owner: unknown;
-}
+};
 
 export const getAllSubmitions = async (
   courseID: number,

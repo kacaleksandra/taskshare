@@ -1,17 +1,20 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
-import {
-  UserInfoStore,
-  UseStoredUserInfo,
-} from '@/app/_utils/get-user-info';
+import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
+import AssignmentMini from '@/app/assignment/_components/assignmentMini';
 import { TEACHER_ROLE_ID } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { AssignmentMiniProps, CourseFullInfo, getAllAssignments, getCourseInfo } from './_api/client';
-import AssignmentMini from '@/app/assignment/_components/assignmentMini';
+
+import {
+  AssignmentMiniProps,
+  CourseFullInfo,
+  getAllAssignments,
+  getCourseInfo,
+} from './_api/client';
 
 export default function Page({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -19,11 +22,13 @@ export default function Page({ params }: { params: { id: string } }) {
     (state: UserInfoStore) => state.loggedUserInfo,
   );
   const [tasks, setTasks] = useState<AssignmentMiniProps[]>([]);
-  const [courseInfo, setCourseInfo] = useState<CourseFullInfo|null>(null);
+  const [courseInfo, setCourseInfo] = useState<CourseFullInfo | null>(null);
   const { mutate: loadAllAssignments } = useMutation({
     mutationFn: getAllAssignments,
     onError: () => {
-      toast({ description: 'Failed to load assignments, please try again later.' });
+      toast({
+        description: 'Failed to load assignments, please try again later.',
+      });
     },
     onSuccess: async (response) => {
       setTasks(response);
@@ -37,7 +42,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const { mutate: loadCourseInfo } = useMutation({
     mutationFn: getCourseInfo,
     onError: () => {
-      toast({ description: 'Failed to load assignments, please try again later.' });
+      toast({
+        description: 'Failed to load assignments, please try again later.',
+      });
     },
     onSuccess: async (response) => {
       setCourseInfo(response);
@@ -63,7 +70,8 @@ export default function Page({ params }: { params: { id: string } }) {
               </Button>
             )}
           </h2>
-          <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>Assignments:
+          <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
+            Assignments:
           </h3>
           {tasks.map((task) => (
             <div className='w-4/5' key={task.id}>

@@ -14,7 +14,6 @@ import { AssignmentMiniProps } from '@/app/course/[id]/_api/client';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-
 const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   id,
   name,
@@ -32,15 +31,14 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   if (currentDate > assignmentDeadline) {
     cardColor = 'text-zinc-700';
   } else if (currentDate > oneWeekBeforeDeadline) {
-    cardColor = currentDate > oneWeekBeforeDeadline ? 'text-red-600' : 'text-zinc-950';
+    cardColor =
+      currentDate > oneWeekBeforeDeadline ? 'text-red-600' : 'text-zinc-950';
   }
   return (
     <Card className='my-2' onClick={() => router.push(`/assignment/${id}`)}>
       <CardHeader>
         <CardTitle>{name}</CardTitle>
-        <CardDescription>
-          {description}
-        </CardDescription>
+        <CardDescription>{description}</CardDescription>
       </CardHeader>
       <CardFooter>
         <CardDescription className={cardColor}>

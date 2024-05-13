@@ -20,7 +20,7 @@ export const UseStoredUserInfo = create<UserInfoStore>((set) => ({
   update: (newUserInfo) => set({ loggedUserInfo: newUserInfo }),
 }));
 
-export function getUserInfo() {
+export async function getUserInfo() {
   const userInfo = UseStoredUserInfo((state) => state.loggedUserInfo);
   return userInfo;
 }
