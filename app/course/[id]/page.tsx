@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
-import Spinner from '@/app/_components/spinner';
+import Loader from '@/app/_components/loader';
 import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
 import AssignmentMini from '@/app/assignment/_components/assignmentMini';
@@ -87,7 +87,7 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
       ) : (
         <>
-          <Spinner />
+          <Loader />
         </>
       )}
     </>

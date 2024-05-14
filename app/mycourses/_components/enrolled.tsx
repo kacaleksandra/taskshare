@@ -73,7 +73,7 @@ const Enrolled: React.FC = () => {
                     <Button type='submit'>Search</Button>
                   </form>
                   {courses.map((course) => (
-                    <div className='w-4/5' key={course.id}>
+                    <div className='w-4/5 cursor-pointer' key={course.id}>
                       <CourseMini {...course} />
                     </div>
                   ))}

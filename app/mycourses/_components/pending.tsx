@@ -63,7 +63,7 @@ const Pending: React.FC = () => {
           {!loading && (
             <>
               {courses.length === 0 && (
-                <div className='flex items-center flex-col my-8 '>
+                <div className='flex items-center flex-col my-8'>
                   <p className='text-center text-lg'>
                     No pending courses found.
                   </p>
@@ -76,7 +76,7 @@ const Pending: React.FC = () => {
                     <Button type='submit'>Search</Button>
                   </form>
                   {courses.map((course) => (
-                    <div className='w-4/5' key={course.id}>
+                    <div className='w-4/5 cursor-pointer' key={course.id}>
                       <CourseMini {...course} />
                     </div>
                   ))}

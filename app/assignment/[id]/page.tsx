@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
-import Spinner from '@/app/_components/spinner';
+import Loader from '@/app/_components/loader';
 import { UseStoredUserInfo } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
 import { STUDENT_ROLE_ID, TEACHER_ROLE_ID } from '@/constants';
@@ -89,7 +89,7 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
         </div>
       ) : (
-        <Spinner />
+        <Loader />
       )}
     </>
   );
