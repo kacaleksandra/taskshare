@@ -8,14 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/app/_components/card';
-import {
-  Form,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/app/_components/form';
+import { Form, FormField } from '@/app/_components/form';
 import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
 import { Label } from '@/app/_components/label';
@@ -25,76 +18,104 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: 'Username must be at least 2 characters.',
-  }),
-});
+import { createCourse } from './_api/client';
 
-const CreateCoursePage: React.FC = () => {
-  const [courseName, setCourseName] = useState('');
-  const [courseYearStart, setCourseDescription] = useState('');
+const LABEL_STYLES = {
+  selected: 'text-sm px-2 font-normal font-semibold',
+  unselected: 'text-sm px-2 font-normal',
+};
 
-  const handleCourseNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setCourseName(event.target.value);
-  };
+function CreateCoursePage() {
+  const router = useRouter();
 
-  const handleCourseYearStartChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>,
-  ) => {
-    setCourseDescription(event.target.value);
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // Add your logic to handle course creation here
-    console.log('Course name:', courseName);
-    console.log('Course description:', courseYearStart);
-  };
+  const [shouldRender, setShouldRender] = useState(false);
+  const [role, setRole] = useState<boolean>(false);
 
   const formSchema = z.object({
-    username: z.string().min(2, {
-      message: 'Username must be at least 2 characters.',
-    }),
+    name: z.string().min(1, { message: 'Course name is required' }),
+    yearStart: z
+      .number()
+      .min(new Date().getFullYear() - 5, { message: 'Write correct year' })
+      .max(new Date().getFullYear() + 5, { message: 'Write correct year' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: '',
+      name: '',
+      yearStart: new Date().getFullYear(),
     },
   });
+
+  const { mutate: createNewCourse } = useMutation({
+    mutationFn: createCourse,
+    onError: () => {
+      toast({ description: 'Something went wrong. Please try again.' });
+    },
+    onSuccess: async (course) => {
+      await router.push(`/course/${course.id}`);
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const dataToSend = { ...values, iconPath: 'house' };
+
+    createNewCourse(dataToSend);
+  }
+
+  useEffect(() => {
+    setShouldRender(true);
+  }, [router]);
+
   return (
-    <div>
-      <h1>Create Course</h1>
-      {/* <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-8'>
-          <FormField
-            control={form.control}
-            name='username'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder='shadcn' {...field} />
-                </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form> */}
-    </div>
+    shouldRender && (
+      <>
+        <div className='flex items-center justify-center mx-3 my-16'>
+          <Card>
+            <CardHeader>
+              <CardTitle className='text-xl'>Create a Course</CardTitle>
+              <CardDescription>
+                Enter your information about the course
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className='grid gap-4'>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                    <FormField
+                      control={form.control}
+                      name='name'
+                      render={({ field }) => (
+                        <FormItemWrapper label='Course Name'>
+                          <Input {...field} />
+                        </FormItemWrapper>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name='yearStart'
+                      render={({ field }) => (
+                        <FormItemWrapper label='Start Year'>
+                          <Input {...field} type='number' />
+                        </FormItemWrapper>
+                      )}
+                    />
+                    <Button type='submit' className='w-full mt-2'>
+                      Create
+                    </Button>
+                  </form>
+                </Form>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </>
+    )
   );
-};
+}
 
 export default CreateCoursePage;
