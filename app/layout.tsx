@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import type { Metadata } from 'next';
+import { CookiesProvider } from 'next-client-cookies/server';
 import { Noto_Sans } from 'next/font/google';
 
 import { NavigationTopMenu } from './_components/navigation-top-menu';
@@ -28,20 +29,22 @@ export default function RootLayout({
     <html lang='en'>
       <body className={noto_sans.className}>
         <ReactQueryProvider>
-          <div className='flex flex-col h-screen'>
-            <NavigationTopMenu />
-            <div className='grow'>
-              <CheckAuth>{children}</CheckAuth>
-            </div>
-            <div className='w-full bg-gradient-to-tr from-blue-700 to-blue-500 h-12'>
-              <div className='flex justify-center items-center h-full py-4 '>
-                <p className='text-white text-sm '>
-                  &copy; TaskShare {new Date().getFullYear()}
-                </p>
+          <CookiesProvider>
+            <div className='flex flex-col h-screen'>
+              <NavigationTopMenu />
+              <div className='grow'>
+                <CheckAuth>{children}</CheckAuth>
+              </div>
+              <div className='w-full bg-gradient-to-tr from-blue-700 to-blue-500 h-12'>
+                <div className='flex justify-center items-center h-full py-4 '>
+                  <p className='text-white text-sm '>
+                    &copy; TaskShare {new Date().getFullYear()}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          <Toaster />
+            <Toaster />
+          </CookiesProvider>
         </ReactQueryProvider>
       </body>
     </html>

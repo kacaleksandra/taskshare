@@ -8,8 +8,10 @@ import Pending from './_components/pending';
 const Page: React.FC = () => {
   return (
     <>
-      <Enrolled />
-      <Pending />
+      <div className='mt-4'>
+        <Enrolled />
+        <Pending />
+      </div>
     </>
   );
 };

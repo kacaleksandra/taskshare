@@ -4,7 +4,7 @@ export const clientFetch = async (
 ) => {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-  const token = sessionStorage.getItem('token');
+  const token = sessionStorage.getItem('session');
 
   const headers: HeadersInit = new Headers({
     'Content-Type': 'application/json',

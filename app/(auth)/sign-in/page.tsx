@@ -8,6 +8,7 @@ import { UseStoredUserInfo } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useCookies } from 'next-client-cookies';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -19,6 +20,7 @@ import { getUserInfo, loginUserClient } from './_api/client';
 
 function SignInPage() {
   const router = useRouter();
+  const cookies = useCookies();
 
   const [shouldRender, setShouldRender] = useState(false);
   const updateUserInfoStore = UseStoredUserInfo((state) => state.update);
@@ -42,7 +44,8 @@ function SignInPage() {
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async (token) => {
-      sessionStorage.setItem('token', token);
+      cookies.set('session', token);
+      sessionStorage.setItem('session', token);
       await setUserinfo();
       await router.push('/dashboard');
       await router.refresh();
@@ -64,12 +67,12 @@ function SignInPage() {
   }
 
   useEffect(() => {
-    if (sessionStorage.getItem('token')) {
+    if (cookies.get('session')) {
       router.push('/dashboard');
     } else {
       setShouldRender(true);
     }
-  }, [router]);
+  }, [router, cookies]);
 
   return (
     shouldRender && (

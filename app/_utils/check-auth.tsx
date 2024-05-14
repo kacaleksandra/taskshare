@@ -1,5 +1,6 @@
 'use client';
 
+import { useCookies } from 'next-client-cookies';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 
@@ -9,9 +10,10 @@ import { notRestrictedPaths } from './not-restricted-paths';
 import { toast } from './use-toast';
 
 const CheckAuth = ({ children }: { children: ReactNode }) => {
+  const cookies = useCookies();
   const updateUserInfoStore = UseStoredUserInfo((state) => state.update);
 
-  const isLogged = sessionStorage.getItem('token');
+  const isLogged = cookies.get('session') ? true : false;
 
   const router = useRouter();
   const currentPath = usePathname();
@@ -24,17 +26,23 @@ const CheckAuth = ({ children }: { children: ReactNode }) => {
         const data = await getUserInfo();
         if (!data) {
           toast({ description: 'Your login session expired.' });
-          sessionStorage.removeItem('token');
+          cookies.remove('session');
           router.push('/sign-in');
+        }
+        if (
+          currentPath === '/sign-in' ||
+          currentPath === '/sign-up' ||
+          currentPath === '/'
+        ) {
+          router.push('/dashboard');
         }
         updateUserInfoStore(data);
       }
     }
-
     fetchData();
 
     return () => {};
-  }, [currentPath, isLogged, updateUserInfoStore, router]);
+  }, [currentPath, isLogged, updateUserInfoStore, router, cookies]);
 
   return <>{children}</>;
 };
