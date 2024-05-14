@@ -5,6 +5,7 @@ import {
   FileStackIcon,
   LayoutDashboardIcon,
 } from 'lucide-react';
+import { useCookies } from 'next-client-cookies';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -13,9 +14,9 @@ import { Button } from './button';
 
 export function NavigationTopMenu() {
   const router = useRouter();
-  let token;
+  const cookies = useCookies();
 
-  if (typeof window !== 'undefined') token = sessionStorage.getItem('token');
+  const isLogged = cookies.get('session') ? true : false;
 
   const userName = UseStoredUserInfo(
     (state) =>
@@ -25,7 +26,8 @@ export function NavigationTopMenu() {
   );
 
   function logoutUser() {
-    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('session');
+    cookies.remove('session');
     router.push('/');
     router.refresh();
   }
@@ -33,7 +35,7 @@ export function NavigationTopMenu() {
   return (
     <nav className='flex flex-row py-1 px-4 shadow-md bg-gradient-to-tl from-blue-500 to-blue-600'>
       <div className='pl-5 flex flex-grow gap-10'>
-        {token && (
+        {isLogged && (
           <>
             <Link
               href='/dashboard'
@@ -53,7 +55,7 @@ export function NavigationTopMenu() {
       </div>
 
       <div className='mr-3'>
-        {token !== null ? (
+        {isLogged ? (
           <div className='flex items-center h-full'>
             <span className='text-white text-xs sm:text-base text-center'>
               {userName}
