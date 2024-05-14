@@ -95,33 +95,34 @@ function EditCoursePage({ params }: { params: { id: string } }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className='grid gap-4'>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
-                      control={form.control}
-                      name='name'
-                      render={({ field }) => (
-                        <FormItemWrapper label='Course Name'>
-                          <Input {...field} />
-                        </FormItemWrapper>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name='yearStart'
-                      render={({ field }) => (
-                        <FormItemWrapper label='Start Year'>
-                          <Input {...field} type='number' />
-                        </FormItemWrapper>
-                      )}
-                    />
-                    <Button type='submit' className='w-full mt-2'>
-                      Save
-                    </Button>
-                  </form>
-                </Form>
-              </div>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className='flex flex-col gap-4'
+                >
+                  <FormField
+                    control={form.control}
+                    name='name'
+                    render={({ field }) => (
+                      <FormItemWrapper label='Course Name'>
+                        <Input {...field} />
+                      </FormItemWrapper>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='yearStart'
+                    render={({ field }) => (
+                      <FormItemWrapper label='Start Year'>
+                        <Input {...field} type='number' />
+                      </FormItemWrapper>
+                    )}
+                  />
+                  <Button type='submit' className='w-full mt-4'>
+                    Save
+                  </Button>
+                </form>
+              </Form>
             </CardContent>
           </Card>
         </div>
