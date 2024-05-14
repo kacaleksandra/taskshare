@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import SubmitAssignment from '../_components/submitAssignment';
 import {
   AssignmentMiniProps,
   getAllSubmitions,
@@ -66,20 +67,20 @@ export default function Page({ params }: { params: { id: string } }) {
               </Button>
             )}
           </h2>
-          <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
-            Submissions
-          </h3>
-          {submissions.map(
-            (submision) => JSON.stringify(submision),
-            // <div className='w-4/5' key={task.id}>
-            //   <AssignmentMini {...task} />
-            // </div>
+          {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+            <>
+              <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
+                Submissions
+              </h3>
+              {submissions.map(
+                (submision) => JSON.stringify(submision),
+                // <div className='w-4/5' key={task.id}>
+                //   <AssignmentMini {...task} />
+                // </div>
+              )}
+            </>
           )}
-          {loggedUserInfo?.roleId === STUDENT_ROLE_ID && (
-            <form>
-              <Button type='submit'>Submit</Button>
-            </form>
-          )}
+          {loggedUserInfo?.roleId === STUDENT_ROLE_ID && <SubmitAssignment />}
         </div>
       </div>
     </>
