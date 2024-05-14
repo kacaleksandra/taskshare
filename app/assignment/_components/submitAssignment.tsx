@@ -30,7 +30,7 @@ const formSchema = z.object({
           'File size must be less than 50MB',
         ),
     )
-    .min(1, 'At least 1 file is required')
+    .min(1, 'At least one file is required')
     .refine(
       (files) => files.every((file) => file.size < 50 * 1024 * 1024),
       'File size must be less than 50MB',
@@ -60,51 +60,50 @@ const SubmitAssignment: React.FC = () => {
             <CardTitle className='text-xl'>Submit your work</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className='grid gap-4'>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <FormField
-                    name='studentComment'
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem className='md:col-span-4 col-span-1'>
-                        <FormLabel>Comment</FormLabel>
-                        <FormControl>
-                          <Input type='text' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  ></FormField>
-                  <FormField
-                    name='requestFiles'
-                    control={form.control}
-                    render={({ field }) => (
-                      <FormItem className='md:col-span-4 col-span-1'>
-                        <FormLabel>Attach Files</FormLabel>
-                        <FormControl>
-                          <Input
-                            type='file'
-                            onChange={(e) => {
-                              const filesArray = Array.from(
-                                e.target.files || [],
-                              );
-                              field.onChange(filesArray);
-                            }}
-                            multiple // Allow multiple file selection
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  ></FormField>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className='flex flex-col gap-4'
+              >
+                <FormField
+                  name='studentComment'
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className='md:col-span-4 col-span-1'>
+                      <FormLabel>Comment</FormLabel>
+                      <FormControl>
+                        <Input type='text' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                ></FormField>
+                <FormField
+                  name='requestFiles'
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className='md:col-span-4 col-span-1'>
+                      <FormLabel>Attach Files</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='file'
+                          onChange={(e) => {
+                            const filesArray = Array.from(e.target.files || []);
+                            field.onChange(filesArray);
+                          }}
+                          multiple // Allow multiple file selection
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                ></FormField>
 
-                  <Button type='submit' className='w-full mt-2'>
-                    Submit
-                  </Button>
-                </form>
-              </Form>
-            </div>
+                <Button type='submit' className='w-full mt-4'>
+                  Submit
+                </Button>
+              </form>
+            </Form>
           </CardContent>
         </Card>
       </div>

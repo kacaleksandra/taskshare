@@ -8,7 +8,7 @@ import AssignmentMini from '@/app/assignment/_components/assignmentMini';
 import { TEACHER_ROLE_ID } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
   AssignmentMiniProps,
@@ -45,7 +45,7 @@ export default function Page({ params }: { params: { id: string } }) {
     mutationFn: getCourseInfo,
     onError: () => {
       toast({
-        description: 'Access denied, please try again later.',
+        description: 'You do not have access to this course.',
       });
       router.push('/dashboard');
     },
@@ -54,9 +54,11 @@ export default function Page({ params }: { params: { id: string } }) {
       setIsVisible(true);
     },
   });
-  useEffect(() => {
+
+  useMemo(() => {
     loadAllAssignments(parseInt(params.id));
   }, [params.id, loadAllAssignments]);
+
   return (
     <>
       {isVisible ? (
@@ -79,7 +81,7 @@ export default function Page({ params }: { params: { id: string } }) {
               Assignments:
             </h3>
             {tasks.map((task) => (
-              <div className='w-4/5' key={task.id}>
+              <div className='w-4/5 cursor-pointer' key={task.id}>
                 <AssignmentMini {...task} />
               </div>
             ))}

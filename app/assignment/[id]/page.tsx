@@ -7,7 +7,7 @@ import { toast } from '@/app/_utils/use-toast';
 import { STUDENT_ROLE_ID, TEACHER_ROLE_ID } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import SubmitAssignment from '../_components/submitAssignment';
 import {
@@ -48,12 +48,14 @@ export default function Page({ params }: { params: { id: string } }) {
       setIsVisible(true);
     },
   });
-  useEffect(() => {
+
+  useMemo(() => {
     if (loggedUserInfo?.roleId === TEACHER_ROLE_ID) {
       loadAllSubmisions(parseInt(params.id));
     }
     loadAssignmentInfo(parseInt(params.id));
   }, [params.id]);
+
   return (
     <>
       {isVisible ? (

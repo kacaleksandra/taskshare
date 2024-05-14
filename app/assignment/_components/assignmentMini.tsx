@@ -1,5 +1,6 @@
 'use client';
 
+import { Badge } from '@/app/_components/badge';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // const element = <FontAwesomeIcon icon={} />
 import {
@@ -27,12 +28,14 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   const oneWeekBeforeDeadline = new Date(deadlineDate);
   oneWeekBeforeDeadline.setDate(oneWeekBeforeDeadline.getDate() - 7);
 
-  let cardColor = 'text-zinc-950';
+  let cardColor = 'text-blue-600 border-blue-600';
   if (currentDate > assignmentDeadline) {
-    cardColor = 'text-zinc-700';
+    cardColor = 'text-zinc-700 border-zinc-700';
   } else if (currentDate > oneWeekBeforeDeadline) {
     cardColor =
-      currentDate > oneWeekBeforeDeadline ? 'text-red-600' : 'text-zinc-950';
+      currentDate > oneWeekBeforeDeadline
+        ? 'text-red-600 border-red-600'
+        : 'text-zinc-950 border-zinc-950';
   }
   return (
     <Card className='my-2' onClick={() => router.push(`/assignment/${id}`)}>
@@ -40,11 +43,11 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
         <CardTitle>{name}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardFooter>
-        <CardDescription className={cardColor}>
+      <CardContent>
+        <Badge variant='outline' className={cardColor}>
           Due to: {new Date(deadlineDate).toLocaleString()}
-        </CardDescription>
-      </CardFooter>
+        </Badge>
+      </CardContent>
     </Card>
   );
 };
