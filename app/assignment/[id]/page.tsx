@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
+import Spinner from '@/app/_components/spinner';
 import { UseStoredUserInfo } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
 import { STUDENT_ROLE_ID, TEACHER_ROLE_ID } from '@/constants';
@@ -16,6 +17,7 @@ import {
 } from './_api/client';
 
 export default function Page({ params }: { params: { id: string } }) {
+  const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo((state) => state.loggedUserInfo);
   const [assignmentInfo, setAssignmentInfo] =
@@ -39,9 +41,11 @@ export default function Page({ params }: { params: { id: string } }) {
       toast({
         description: 'Failed to load assignment info, please try again later.',
       });
+      router.push('/dashboard');
     },
     onSuccess: async (response) => {
       setAssignmentInfo(response);
+      setIsVisible(true);
     },
   });
   useEffect(() => {
@@ -52,37 +56,41 @@ export default function Page({ params }: { params: { id: string } }) {
   }, [params.id]);
   return (
     <>
-      <div className='max-w-full'>
-        <div className='max-w-full items-center flex flex-col'>
-          <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>
-            {assignmentInfo?.name}
-            {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-              <Button
-                variant={'destructive'}
-                onClick={() => {
-                  router.push(`/assignment/edit/${params.id}`);
-                }}
-              >
-                Edit
-              </Button>
-            )}
-          </h2>
-          {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-            <>
-              <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
-                Submissions
-              </h3>
-              {submissions.map(
-                (submision) => JSON.stringify(submision),
-                // <div className='w-4/5' key={task.id}>
-                //   <AssignmentMini {...task} />
-                // </div>
+      {isVisible ? (
+        <div className='max-w-full'>
+          <div className='max-w-full items-center flex flex-col'>
+            <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>
+              {assignmentInfo?.name}
+              {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+                <Button
+                  variant={'destructive'}
+                  onClick={() => {
+                    router.push(`/assignment/edit/${params.id}`);
+                  }}
+                >
+                  Edit
+                </Button>
               )}
-            </>
-          )}
-          {loggedUserInfo?.roleId === STUDENT_ROLE_ID && <SubmitAssignment />}
+            </h2>
+            {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+              <>
+                <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
+                  Submissions
+                </h3>
+                {submissions.map(
+                  (submision) => JSON.stringify(submision),
+                  // <div className='w-4/5' key={task.id}>
+                  //   <AssignmentMini {...task} />
+                  // </div>
+                )}
+              </>
+            )}
+            {loggedUserInfo?.roleId === STUDENT_ROLE_ID && <SubmitAssignment />}
+          </div>
         </div>
-      </div>
+      ) : (
+        <Spinner />
+      )}
     </>
   );
 }
