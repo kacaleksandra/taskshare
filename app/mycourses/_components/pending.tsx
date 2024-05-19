@@ -1,13 +1,11 @@
 import Loader from '@/app/_components/loader';
 import { SMALL_PAGE_SIZE } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '../../_components/button';
 import CourseMini from '../../_components/course-mini';
 import { Input } from '../../_components/input';
-import { UseStoredUserInfo } from '../../_utils/get-user-info';
 import { toast } from '../../_utils/use-toast';
 import { CourseMiniProps, getPendingCourses } from '../_api/client';
 
@@ -73,7 +71,9 @@ const Pending: React.FC = () => {
                 <div className='w-full flex items-center flex-col'>
                   <form className='w-4/5 flex' onSubmit={handleSubmit}>
                     <Input type='text' placeholder='Search' name='search' />
-                    <Button type='submit'>Search</Button>
+                    <Button type='submit' className='ml-1'>
+                      Search
+                    </Button>
                   </form>
                   {courses.map((course) => (
                     <div className='w-4/5 cursor-pointer' key={course.id}>

@@ -1,19 +1,18 @@
 'use client';
 
 import { Badge } from '@/app/_components/badge';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// const element = <FontAwesomeIcon icon={} />
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/app/_components/card';
+import { Dialog, DialogContent, DialogTrigger } from '@/app/_components/dialog';
 import { AssignmentMiniProps } from '@/app/course/[id]/_api/client';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
+
+import SubmitAssignment from './submitAssignment';
 
 const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   id,
@@ -21,7 +20,7 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   deadlineDate,
   description,
 }) => {
-  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const currentDate = new Date();
   const assignmentDeadline = new Date(deadlineDate);
@@ -38,17 +37,24 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
         : 'text-zinc-950 border-zinc-950';
   }
   return (
-    <Card className='my-2' onClick={() => router.push(`/assignment/${id}`)}>
-      <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Badge variant='outline' className={cardColor}>
-          Due to: {new Date(deadlineDate).toLocaleString()}
-        </Badge>
-      </CardContent>
-    </Card>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger className='w-full'>
+        <Card className='my-2 text-left'>
+          <CardHeader>
+            <CardTitle>{name}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Badge variant='outline' className={cardColor}>
+              Due to: {new Date(deadlineDate).toLocaleString()}
+            </Badge>
+          </CardContent>
+        </Card>
+      </DialogTrigger>
+      <DialogContent>
+        <SubmitAssignment onOpenChange={setIsOpen} />
+      </DialogContent>
+    </Dialog>
   );
 };
 

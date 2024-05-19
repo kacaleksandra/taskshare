@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
+import { Dialog, DialogTrigger } from '@/app/_components/dialog';
 import Loader from '@/app/_components/loader';
 import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
@@ -10,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
+import EditCourse from '../_edit/edit-course';
 import {
   AssignmentMiniProps,
   CourseFullInfo,
@@ -18,6 +20,7 @@ import {
 } from './_api/client';
 
 export default function Page({ params }: { params: { id: string } }) {
+  const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo(
@@ -68,15 +71,14 @@ export default function Page({ params }: { params: { id: string } }) {
               {courseInfo?.name}
             </h2>
             {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-              <Button
-                variant={'destructive'}
-                className='px-8'
-                onClick={() => {
-                  router.push(`/course/edit/${params.id}`);
-                }}
-              >
-                Edit
-              </Button>
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogTrigger asChild>
+                  <Button variant={'destructive'} className='px-8'>
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <EditCourse courseId={params.id} onOpenChange={setIsOpen} />
+              </Dialog>
             )}
           </div>
           <div className='w-full items-center flex flex-col'>

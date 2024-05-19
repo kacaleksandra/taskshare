@@ -70,7 +70,9 @@ const Enrolled: React.FC = () => {
                 <div className='w-full flex items-center flex-col'>
                   <form className='w-4/5 flex' onSubmit={handleSubmit}>
                     <Input type='text' placeholder='Search' name='search' />
-                    <Button type='submit'>Search</Button>
+                    <Button type='submit' className='ml-1'>
+                      Search
+                    </Button>
                   </form>
                   {courses.map((course) => (
                     <div className='w-4/5 cursor-pointer' key={course.id}>
