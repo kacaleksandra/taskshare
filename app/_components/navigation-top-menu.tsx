@@ -9,7 +9,7 @@ import { useCookies } from 'next-client-cookies';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { UseStoredUserInfo } from '../_utils/get-user-info';
+import { UseStoredUserInfo } from '../_utils/zustand';
 import { Button } from './button';
 
 export function NavigationTopMenu() {

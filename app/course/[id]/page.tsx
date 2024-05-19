@@ -3,8 +3,8 @@
 import { Button } from '@/app/_components/button';
 import { Dialog, DialogTrigger } from '@/app/_components/dialog';
 import Loader from '@/app/_components/loader';
-import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
+import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/zustand';
 import AssignmentMini from '@/app/assignment/_components/assignmentMini';
 import { TEACHER_ROLE_ID } from '@/constants';
 import { useMutation } from '@tanstack/react-query';

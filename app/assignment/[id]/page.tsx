@@ -2,8 +2,8 @@
 
 import { Button } from '@/app/_components/button';
 import Loader from '@/app/_components/loader';
-import { UseStoredUserInfo } from '@/app/_utils/get-user-info';
 import { toast } from '@/app/_utils/use-toast';
+import { UseStoredUserInfo } from '@/app/_utils/zustand';
 import { STUDENT_ROLE_ID, TEACHER_ROLE_ID } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
