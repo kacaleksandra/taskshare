@@ -29,7 +29,6 @@ const Page: React.FC = () => {
   });
 
   useEffect(() => {
-    console.log('Page number changed to:', pageNumber);
     reloadCourses({
       pageSize: BIG_PAGE_SIZE,
       pageNumber: pageNumber,
@@ -43,7 +42,6 @@ const Page: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(event.currentTarget.search.value);
     setPageNumber(1);
     searchParams = event.currentTarget.search.value;
     reloadCourses({
@@ -69,7 +67,7 @@ const Page: React.FC = () => {
                 </Button>
               </form>
               {courses.map((course) => (
-                <div className='w-4/5 cursor-pointer' key={course.id}>
+                <div className='w-4/5' key={course.id}>
                   <CourseMini {...course} />
                 </div>
               ))}

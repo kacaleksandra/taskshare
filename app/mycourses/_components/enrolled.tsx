@@ -24,14 +24,12 @@ const Enrolled: React.FC = () => {
     },
     onSuccess: async (response) => {
       setLoading(false);
-      console.log(response);
       setCourses(response.items);
       setTotalPages(response.totalPages);
     },
   });
 
   useEffect(() => {
-    console.log('Page number changed to:', pageNumber);
     setLoading(true);
     reloadCourses({
       pageSize: SMALL_PAGE_SIZE,
@@ -43,7 +41,6 @@ const Enrolled: React.FC = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    console.log(event.currentTarget.search.value);
     setPageNumber(1);
     searchParams = event.currentTarget.search.value;
     reloadCourses({
