@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-import { getUserInfo } from './app/(auth)/sign-in/_api/client';
 import { notRestrictedPaths } from './app/_utils/not-restricted-paths';
 
-// This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   const isLogged = request.cookies.get('session') ? true : false;
 
