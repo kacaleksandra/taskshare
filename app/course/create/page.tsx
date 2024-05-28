@@ -37,7 +37,7 @@ function CreateCoursePage() {
 
   const formSchema = z.object({
     name: z.string().min(1, { message: 'Course name is required' }),
-    yearStart: z
+    yearStart: z.coerce
       .number()
       .min(new Date().getFullYear() - 5, { message: 'Write correct year' })
       .max(new Date().getFullYear() + 5, { message: 'Write correct year' }),

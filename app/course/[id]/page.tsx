@@ -21,7 +21,8 @@ import {
 } from './_api/client';
 
 export default function Page({ params }: { params: { id: string } }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEditCourse, setIsOpenEditCourse] = useState(false);
+  const [isOpenAddAssignment, setIsOpenAddAssignment] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo(
@@ -72,13 +73,19 @@ export default function Page({ params }: { params: { id: string } }) {
               {courseInfo?.name}
             </h2>
             {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+              <Dialog
+                open={isOpenEditCourse}
+                onOpenChange={setIsOpenEditCourse}
+              >
                 <DialogTrigger asChild>
                   <Button variant={'outline'} className='px-8'>
                     Edit
                   </Button>
                 </DialogTrigger>
-                <EditCourse courseId={params.id} onOpenChange={setIsOpen} />
+                <EditCourse
+                  courseId={params.id}
+                  onOpenChange={setIsOpenEditCourse}
+                />
               </Dialog>
             )}
           </div>
@@ -88,7 +95,10 @@ export default function Page({ params }: { params: { id: string } }) {
                 Assignments:
               </h3>
               {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <Dialog
+                  open={isOpenAddAssignment}
+                  onOpenChange={setIsOpenAddAssignment}
+                >
                   <DialogTrigger asChild>
                     <Button variant={'outline'} className='px-8'>
                       Create Assignment
@@ -96,7 +106,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   </DialogTrigger>
                   <CreateAssignment
                     courseId={params.id}
-                    onOpenChange={setIsOpen}
+                    onOpenChange={setIsOpenAddAssignment}
                   />
                 </Dialog>
               )}

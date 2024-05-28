@@ -27,6 +27,7 @@ export type CourseFullInfo = {
   id: number;
   name: string;
   iconPath: string;
+  yearStart: number;
   approvalStatus: number;
   owner: unknown;
 };

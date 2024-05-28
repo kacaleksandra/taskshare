@@ -35,7 +35,7 @@ function EditCourse({
 
   const formSchema = z.object({
     name: z.string().min(1, { message: 'Course name is required' }),
-    yearStart: z
+    yearStart: z.coerce
       .number()
       .min(new Date().getFullYear() - 5, { message: 'Write correct year' })
       .max(new Date().getFullYear() + 5, { message: 'Write correct year' }),
@@ -67,8 +67,7 @@ function EditCourse({
     onSuccess: async (course) => {
       setShouldRender(true);
       form.setValue('name', course.name);
-      //TODO: after api change
-      //   form.setValue('yearStart', course.yearStart);
+      form.setValue('yearStart', course.yearStart);
     },
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
