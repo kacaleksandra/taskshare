@@ -6,6 +6,7 @@ import Loader from '@/app/_components/loader';
 import { toast } from '@/app/_utils/use-toast';
 import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/zustand';
 import AssignmentMini from '@/app/assignment/_components/assignmentMini';
+import CreateAssignment from '@/app/assignment/_create/create-assignment';
 import { TEACHER_ROLE_ID } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -73,7 +74,7 @@ export default function Page({ params }: { params: { id: string } }) {
             {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
               <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
-                  <Button variant={'destructive'} className='px-8'>
+                  <Button variant={'outline'} className='px-8'>
                     Edit
                   </Button>
                 </DialogTrigger>
@@ -82,9 +83,24 @@ export default function Page({ params }: { params: { id: string } }) {
             )}
           </div>
           <div className='w-full items-center flex flex-col'>
-            <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
-              Assignments:
-            </h3>
+            <div className='w-4/5 flex items-center justify-between'>
+              <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
+                Assignments:
+              </h3>
+              {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant={'outline'} className='px-8'>
+                      Create Assignment
+                    </Button>
+                  </DialogTrigger>
+                  <CreateAssignment
+                    courseId={params.id}
+                    onOpenChange={setIsOpen}
+                  />
+                </Dialog>
+              )}
+            </div>
             {tasks.map((task) => (
               <div className='w-4/5 cursor-pointer' key={task.id}>
                 <AssignmentMini {...task} />

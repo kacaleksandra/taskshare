@@ -1,6 +1,7 @@
 'use client';
 
 import { Badge } from '@/app/_components/badge';
+import { Button } from '@/app/_components/button';
 import {
   Card,
   CardContent,
@@ -9,9 +10,13 @@ import {
   CardTitle,
 } from '@/app/_components/card';
 import { Dialog, DialogContent, DialogTrigger } from '@/app/_components/dialog';
+import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/zustand';
 import { AssignmentMiniProps } from '@/app/course/[id]/_api/client';
+import { TEACHER_ROLE_ID } from '@/constants';
 import React, { useState } from 'react';
 
+import EditAssignment from '../_edit/edit-assignment';
+import RemoveAssignment from '../_remove/remove-assignment';
 import SubmitAssignment from './submitAssignment';
 
 const AssignmentMini: React.FC<AssignmentMiniProps> = ({
@@ -20,7 +25,12 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   deadlineDate,
   description,
 }) => {
+  const loggedUserInfo = UseStoredUserInfo(
+    (state: UserInfoStore) => state.loggedUserInfo,
+  );
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
 
   const currentDate = new Date();
   const assignmentDeadline = new Date(deadlineDate);
@@ -41,7 +51,43 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
       <DialogTrigger className='w-full'>
         <Card className='my-2 text-left'>
           <CardHeader>
-            <CardTitle>{name}</CardTitle>
+            <CardTitle className=' flex items-center justify-between'>
+              <span>{name}</span>
+              {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+                <div className='self-end' onClick={(e) => e.stopPropagation()}>
+                  <Dialog open={isOpenEdit} onOpenChange={setIsOpenEdit}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant={'outline'}
+                        className='px-4 mr-1'
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Edit
+                      </Button>
+                    </DialogTrigger>
+                    <EditAssignment
+                      assignmentId={id}
+                      onOpenChange={setIsOpenEdit}
+                    />
+                  </Dialog>
+                  <Dialog open={isOpenDelete} onOpenChange={setIsOpenDelete}>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant={'destructive'}
+                        className='px-4'
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Delete
+                      </Button>
+                    </DialogTrigger>
+                    <RemoveAssignment
+                      assignmentId={id}
+                      onOpenChange={setIsOpenDelete}
+                    />
+                  </Dialog>
+                </div>
+              )}
+            </CardTitle>
             <CardDescription>{description}</CardDescription>
           </CardHeader>
           <CardContent>
