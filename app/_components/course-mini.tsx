@@ -11,6 +11,7 @@ import { Eye, LoaderCircle, UserRoundCheck, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
+import { cn } from '../_utils/cn-helper';
 import { CourseMiniProps } from '../dashboard/_api/client';
 
 const CourseMini: React.FC<CourseMiniProps> = ({
@@ -19,6 +20,7 @@ const CourseMini: React.FC<CourseMiniProps> = ({
   // iconPath,
   owner,
   approvalStatus,
+  yearStart,
 }) => {
   const router = useRouter();
 
@@ -35,24 +37,26 @@ const CourseMini: React.FC<CourseMiniProps> = ({
     }
   };
 
+  const isApproved = approvalStatus === 1 || approvalStatus === 3;
+
   return (
     <Card
-      className='my-2 flex flex-row w-full cursor-pointer'
-      onClick={() => router.push(`/course/${id}`)}
+      className={(cn(isApproved && 'cursor-pointer'), 'my-2')}
+      onClick={isApproved ? () => router.push(`/course/${id}`) : undefined}
     >
-      <CardHeader className='grow'>
-        <CardTitle>{name}</CardTitle>
-        <CardDescription>
-          {owner.name} {owner.lastname}
-        </CardDescription>
-      </CardHeader>
-      <div className='flex justify-center items-center'>
-        {approvalStatusToIcon()}
+      <div className='flex flex-row w-full pr-8'>
+        <CardHeader className='grow'>
+          <CardTitle>{name}</CardTitle>
+          <CardDescription>
+            {owner.name} {owner.lastname}
+          </CardDescription>
+        </CardHeader>
+        <div className='flex justify-center items-center'>
+          {approvalStatusToIcon()}
+        </div>
       </div>
-      <CardFooter>
-        {/* <CardDescription> */}
-        {/* {year_start} */}
-        {/* </CardDescription> */}
+      <CardFooter className='w-1/4'>
+        <CardDescription>{yearStart}</CardDescription>
       </CardFooter>
     </Card>
   );

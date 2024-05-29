@@ -10,6 +10,7 @@ export interface CourseMiniProps {
   name: string;
   iconPath: string;
   approvalStatus: number;
+  yearStart: number;
   owner: {
     id: number;
     email: string;
@@ -37,6 +38,26 @@ export const getEnrolledCourses = async (
   });
 
   const res = await clientFetch(`/course/user/enrolled?${queryParams}`, {
+    method: 'GET',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to get courses');
+  } else {
+    return res.json();
+  }
+};
+export const getMyCoursesTeacher = async (
+  params: FilterParams,
+): Promise<CourseResponse> => {
+  const { searchParams, pageSize, pageNumber } = params;
+  const queryParams = new URLSearchParams({
+    PageSize: pageSize.toString(),
+    PageNumber: pageNumber.toString(),
+    SearchPhrase: searchParams || '',
+  });
+
+  const res = await clientFetch(`/course/user/owned?${queryParams}`, {
     method: 'GET',
   });
 

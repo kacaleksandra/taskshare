@@ -10,6 +10,7 @@ export interface CourseMiniProps {
   name: string;
   iconPath: string;
   approvalStatus: number;
+  yearStart: number;
   owner: {
     id: number;
     email: string;

@@ -1,3 +1,5 @@
+'use client';
+
 import Loader from '@/app/_components/loader';
 import { SMALL_PAGE_SIZE } from '@/constants';
 import { useMutation } from '@tanstack/react-query';
@@ -7,9 +9,13 @@ import { Button } from '../../_components/button';
 import CourseMini from '../../_components/course-mini';
 import { Input } from '../../_components/input';
 import { toast } from '../../_utils/use-toast';
-import { CourseMiniProps, getEnrolledCourses } from '../_api/client';
+import {
+  CourseMiniProps,
+  getEnrolledCourses,
+  getMyCoursesTeacher,
+} from '../_api/client';
 
-const Enrolled: React.FC = () => {
+const Enrolled = ({ role }: { role: number }) => {
   const [courses, setCourses] = useState<CourseMiniProps[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -17,7 +23,7 @@ const Enrolled: React.FC = () => {
   let searchParams: string = '';
 
   const { mutate: reloadCourses, status } = useMutation({
-    mutationFn: getEnrolledCourses,
+    mutationFn: role === 2 ? getMyCoursesTeacher : getEnrolledCourses,
     onError: () => {
       setLoading(false);
       toast({ description: 'Something went wrong. Please try again.' });

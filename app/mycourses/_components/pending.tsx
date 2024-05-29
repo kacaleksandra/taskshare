@@ -1,3 +1,5 @@
+'use client';
+
 import Loader from '@/app/_components/loader';
 import { SMALL_PAGE_SIZE } from '@/constants';
 import { useMutation } from '@tanstack/react-query';

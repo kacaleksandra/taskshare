@@ -1,19 +1,20 @@
-'use client';
-
 import React from 'react';
 
+import { getUserInfoServer } from '../_utils/get-user-info-server';
 import Enrolled from './_components/enrolled';
 import Pending from './_components/pending';
 
-const Page: React.FC = () => {
+const MyCoursesPage = async () => {
+  const userInfo = await getUserInfoServer();
   return (
     <>
       <div className='mt-4'>
-        <Enrolled />
-        <Pending />
+        {/* for teacher they won't be enrolled but rather my courses*/}
+        <Enrolled role={userInfo.roleId} />
+        {userInfo.roleId !== 2 && <Pending />}
       </div>
     </>
   );
 };
 
-export default Page;
+export default MyCoursesPage;
