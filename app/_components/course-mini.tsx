@@ -41,7 +41,7 @@ const CourseMini: React.FC<CourseMiniProps> = ({
 
   return (
     <Card
-      className={(cn(isApproved && 'cursor-pointer'), 'my-2')}
+      className={isApproved ? 'cursor-pointer my-2' : 'my-2'}
       onClick={isApproved ? () => router.push(`/course/${id}`) : undefined}
     >
       <div className='flex flex-row w-full pr-8'>

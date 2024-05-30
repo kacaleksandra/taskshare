@@ -83,7 +83,7 @@ export default function Page({ params }: { params: { id: string } }) {
                   </Button>
                 </DialogTrigger>
                 <EditCourse
-                  courseId={params.id}
+                  courseId={parseInt(params.id)}
                   onOpenChange={setIsOpenEditCourse}
                 />
               </Dialog>

@@ -1,4 +1,5 @@
 import { FileCheckIcon, UsersIcon } from 'lucide-react';
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { getUserInfoServer } from '../../_utils/get-user-info-server';
@@ -19,20 +20,26 @@ const TeacherDashboard = async () => {
       </div>
       <div className='px-8 grid md:grid-cols-3 auto-rows-fr gap-10'>
         <CreateCourseDialog />
-        <div className='text-white border border-blue-400 bg-gradient-to-br from-blue-600 to-blue-400 shadow-lg rounded-lg px-4 py-4 flex flex-col'>
+        <Link
+          href='/teacher-courses'
+          className='text-white border border-blue-400 bg-gradient-to-br from-blue-600 to-blue-400 shadow-lg rounded-lg px-4 py-4 flex flex-col'
+        >
           <h2 className='text-center font-medium text-lg mt-2'>
             <FileCheckIcon /> Check your courses
           </h2>
           <p className='py-4'>
             See list with every course you created and edit them.
           </p>
-        </div>
-        <div className='text-white border border-blue-400 bg-gradient-to-br from-blue-600 to-blue-400 shadow-lg rounded-lg px-4 py-4 flex flex-col'>
+        </Link>
+        <Link
+          href='/manage-members'
+          className='text-white border border-blue-400 bg-gradient-to-br from-blue-600 to-blue-400 shadow-lg rounded-lg px-4 py-4 flex flex-col'
+        >
           <h2 className='text-center font-medium text-lg mt-2'>
             <UsersIcon /> Check members of your courses
           </h2>
           <p className='py-4'>See list with your courses and manage members.</p>
-        </div>
+        </Link>
       </div>
     </div>
   );

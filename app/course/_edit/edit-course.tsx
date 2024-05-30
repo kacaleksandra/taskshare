@@ -11,7 +11,8 @@ import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -27,11 +28,14 @@ const LABEL_STYLES = {
 function EditCourse({
   courseId,
   onOpenChange,
+  queryKey,
 }: {
-  courseId: string;
+  courseId: number;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
+  queryKey?: string;
 }) {
   const [shouldRender, setShouldRender] = useState(false);
+  const queryClient = useQueryClient();
 
   const formSchema = z.object({
     name: z.string().min(1, { message: 'Course name is required' }),
@@ -56,6 +60,7 @@ function EditCourse({
     },
     onSuccess: async () => {
       onOpenChange(false);
+      if (queryKey) queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
 
@@ -73,11 +78,11 @@ function EditCourse({
   function onSubmit(values: z.infer<typeof formSchema>) {
     const dataToSend = { ...values, iconPath: 'house' };
 
-    editCourseInfo([parseInt(courseId), dataToSend]);
+    editCourseInfo([courseId, dataToSend]);
   }
 
   useEffect(() => {
-    getPreviousCourseInfo(parseInt(courseId));
+    getPreviousCourseInfo(courseId);
   }, []);
 
   return (
