@@ -32,10 +32,9 @@ export type CourseFullInfo = {
 };
 
 export const getAllSubmitions = async (
-  courseID: number,
+  assignmentID: number,
 ): Promise<CourseFullInfo> => {
-  throw new Error('Not implemented');
-  const res = await clientFetch(`/allSubmitionsNoEndpoint/${courseID}`, {
+  const res = await clientFetch(`/submission/byassignment/${assignmentID}`, {
     method: 'GET',
   });
 

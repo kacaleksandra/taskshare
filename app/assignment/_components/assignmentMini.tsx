@@ -13,18 +13,22 @@ import { Dialog, DialogContent, DialogTrigger } from '@/app/_components/dialog';
 import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/zustand';
 import { AssignmentMiniProps } from '@/app/course/[id]/_api/client';
 import { TEACHER_ROLE_ID } from '@/constants';
+import { EyeOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import EditAssignment from '../_edit/edit-assignment';
 import RemoveAssignment from '../_remove/remove-assignment';
-import SubmitAssignment from './submitAssignment';
+import SubmitAssignment from '../_submit/submitAssignment';
 
 const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   id,
   name,
+  visibility,
   deadlineDate,
   description,
 }) => {
+  const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo(
     (state: UserInfoStore) => state.loggedUserInfo,
   );
@@ -46,13 +50,20 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
         ? 'text-red-600 border-red-600'
         : 'text-zinc-950 border-zinc-950';
   }
+  const goToAssignment = () => {
+    router.push(`/assignment/${id}`);
+    return '';
+  };
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger className='w-full'>
         <Card className='my-2 text-left'>
           <CardHeader>
             <CardTitle className=' flex items-center justify-between'>
-              <span>{name}</span>
+              <div className='flex items-center'>
+                <span className='mr-3'>{name} </span>
+                {visibility === false && <EyeOff />}
+              </div>
               {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
                 <div className='self-end' onClick={(e) => e.stopPropagation()}>
                   <Dialog open={isOpenEdit} onOpenChange={setIsOpenEdit}>
@@ -98,7 +109,10 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
         </Card>
       </DialogTrigger>
       <DialogContent>
-        <SubmitAssignment onOpenChange={setIsOpen} />
+        {loggedUserInfo?.roleId === TEACHER_ROLE_ID &&
+          isOpen &&
+          goToAssignment()}
+        <SubmitAssignment assignmentID={id} onOpenChange={setIsOpen} />
       </DialogContent>
     </Dialog>
   );

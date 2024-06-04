@@ -12,7 +12,6 @@ export const editAssignment = async ([id, body]: [
   number,
   AssignmentBase,
 ]): Promise<void> => {
-  console.log(body);
   const res = await clientFetch(`/assignment/${id}`, {
     method: 'PUT',
     body: JSON.stringify(body),

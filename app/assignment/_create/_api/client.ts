@@ -10,7 +10,6 @@ interface AssignmentBase {
 type CourseReturn = AssignmentBase & { id: number };
 
 export const createAssignment = async (body: AssignmentBase): Promise<void> => {
-  console.log(body);
   const res = await clientFetch(`/assignment`, {
     method: 'POST',
     body: JSON.stringify(body),

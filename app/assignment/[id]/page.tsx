@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import SubmitAssignment from '../_components/submitAssignment';
+import SubmitAssignment from '../_submit/submitAssignment';
 import {
   AssignmentMiniProps,
   getAllSubmitions,
@@ -22,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const loggedUserInfo = UseStoredUserInfo((state) => state.loggedUserInfo);
   const [assignmentInfo, setAssignmentInfo] =
     useState<AssignmentMiniProps | null>(null);
-  const [submissions, setSubmissions] = useState<[]>([]);
+  const [submissions, setSubmissions] = useState<any[]>([]);
 
   const { mutate: loadAllSubmisions } = useMutation({
     mutationFn: getAllSubmitions,
@@ -32,6 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
       });
     },
     onSuccess: async (response) => {
+      console.log(response);
       setSubmissions([]);
     },
   });
@@ -64,17 +65,6 @@ export default function Page({ params }: { params: { id: string } }) {
             <h2 className='text-left text-4xl my-8 font-bold'>
               {assignmentInfo?.name}
             </h2>
-            {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-              <Button
-                variant={'destructive'}
-                className='px-8'
-                onClick={() => {
-                  router.push(`/course/edit/${params.id}`);
-                }}
-              >
-                Edit
-              </Button>
-            )}
           </div>
           {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
             <div className='w-full items-center flex flex-col'>
@@ -82,14 +72,18 @@ export default function Page({ params }: { params: { id: string } }) {
                 Submissions
               </h3>
               {submissions.map(
-                (submision) => JSON.stringify(submision),
+                (submision) => (
+                  <>{JSON.stringify(submision)}ok</>
+                ),
                 // <div className='w-4/5' key={task.id}>
                 //   <AssignmentMini {...task} />
                 // </div>
               )}
             </div>
           )}
-          {loggedUserInfo?.roleId === STUDENT_ROLE_ID && <SubmitAssignment />}
+          {loggedUserInfo?.roleId === STUDENT_ROLE_ID && (
+            <SubmitAssignment assignmentID={parseInt(params.id)} />
+          )}
         </div>
       ) : (
         <Loader />

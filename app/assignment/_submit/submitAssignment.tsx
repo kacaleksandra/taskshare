@@ -15,10 +15,14 @@ import {
   FormMessage,
 } from '@/app/_components/form';
 import { Input } from '@/app/_components/input';
+import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import React, { Dispatch } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { makeSubmission, submitFiles } from './_api/client';
 
 const formSchema = z.object({
   studentComment: z.string(),
@@ -42,16 +46,46 @@ type FormData = z.infer<typeof formSchema>;
 
 const SubmitAssignment = ({
   onOpenChange,
+  assignmentID,
 }: {
   onOpenChange?: Dispatch<React.SetStateAction<boolean>>;
+  assignmentID: number;
 }) => {
   const onSubmit = (data: FormData) => {
     // Submit data to API
-    console.log(data);
+    submitAssignmentNew({ assignmentID, studentComment: data.studentComment });
 
     //to bedzie trzeba dac na onSuccess w mutacji
     if (onOpenChange) onOpenChange(false);
   };
+
+  const { mutate: submitAssignmentNew } = useMutation({
+    mutationFn: makeSubmission,
+    onError: () => {
+      toast({
+        description: 'Failed to make new submission, please try again later.',
+      });
+    },
+    onSuccess: async (response) => {
+      submitFilesNew({
+        submissionID: response,
+        files: form.getValues().requestFiles,
+      });
+    },
+  });
+
+  const { mutate: submitFilesNew } = useMutation({
+    mutationFn: submitFiles,
+    onError: () => {
+      toast({
+        description: 'Failed to submit files, please try again later.',
+      });
+    },
+    onSuccess: async (response) => {
+      console.log(response);
+      onOpenChange?.(false);
+    },
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

@@ -3,7 +3,7 @@ import { clientFetch } from '@/app/_utils/client-fetch';
 export interface AssignmentMiniProps {
   id: number;
   name: string;
-  visible: boolean;
+  visibility: boolean;
   deadlineDate: string;
   description: string;
 }
@@ -15,7 +15,7 @@ export const getAllAssignments = async (
   const res = await clientFetch(`/assignment/bycourse/${courseID}`, {
     method: 'GET',
   });
-
+  
   if (!res.ok) {
     throw new Error('Failed to get assignments');
   } else {
