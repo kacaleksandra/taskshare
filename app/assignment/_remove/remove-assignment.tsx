@@ -1,37 +1,35 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
-import { Checkbox } from '@/app/_components/checkbox';
 import {
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from '@/app/_components/dialog';
-import { Form, FormField, FormItem } from '@/app/_components/form';
-import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
-import { Input } from '@/app/_components/input';
 import { toast } from '@/app/_utils/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Dispatch, SetStateAction } from 'react';
 
 import { deleteAssignment } from './_api/client';
 
 function RemoveAssignment({
   assignmentId,
+  queryKey,
   onOpenChange,
 }: {
   assignmentId: number;
+  queryKey: string;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) {
+  const queryClient = useQueryClient();
+
   const { mutate: removeAssignment } = useMutation({
     mutationFn: deleteAssignment,
     onError: () => {
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
       onOpenChange(false);
     },
   });

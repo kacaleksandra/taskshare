@@ -18,9 +18,8 @@ export const editAssignment = async ([id, body]: [
   });
 
   if (!res.ok) {
+    console.log(res);
     throw new Error('Failed to create assignment. Please try again later.');
-  } else {
-    return;
   }
 };
 

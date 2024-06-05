@@ -6,6 +6,7 @@ export interface AssignmentMiniProps {
   visibility: boolean;
   deadlineDate: string;
   description: string;
+  queryKey: string;
 }
 export type AssigmentResponse = AssignmentMiniProps[];
 
@@ -15,7 +16,7 @@ export const getAllAssignments = async (
   const res = await clientFetch(`/assignment/bycourse/${courseID}`, {
     method: 'GET',
   });
-  
+
   if (!res.ok) {
     throw new Error('Failed to get assignments');
   } else {

@@ -12,8 +12,8 @@ import { FormItemWrapper } from '@/app/_components/form-item-wrapper';
 import { Input } from '@/app/_components/input';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Dispatch, SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -21,16 +21,20 @@ import { createAssignment } from './_api/client';
 
 function CreateAssignment({
   courseId,
+  queryKey,
   onOpenChange,
 }: {
   courseId: string;
+  queryKey: string;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) {
+  const queryClient = useQueryClient();
+
   const formSchema = z.object({
     name: z.string().min(1, { message: 'Assignment name is required' }),
     visibility: z.boolean(),
     description: z.string().min(1, { message: 'Description is required' }),
-    deadlineDate: z.string(),
+    deadlineDate: z.string().min(1, { message: 'Deadline is required' }),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,9 +43,7 @@ function CreateAssignment({
       name: '',
       visibility: true,
       description: '',
-      deadlineDate: new Date(
-        new Date().getTime() + 7 * 24 * 60 * 60 * 1000,
-      ).toLocaleDateString(),
+      deadlineDate: '',
     },
   });
 
@@ -51,6 +53,7 @@ function CreateAssignment({
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
       onOpenChange(false);
     },
   });

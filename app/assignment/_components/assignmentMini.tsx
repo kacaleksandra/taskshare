@@ -27,6 +27,7 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   visibility,
   deadlineDate,
   description,
+  queryKey,
 }) => {
   const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo(
@@ -50,68 +51,76 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
         ? 'text-red-600 border-red-600'
         : 'text-zinc-950 border-zinc-950';
   }
+
   const goToAssignment = () => {
     router.push(`/assignment/${id}`);
-    return '';
   };
+
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (e.target instanceof HTMLElement && e.target.tagName !== 'BUTTON') {
+      if (loggedUserInfo?.roleId === 2) {
+        goToAssignment();
+      } else {
+        setIsOpen(true);
+      }
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger className='w-full'>
-        <Card className='my-2 text-left'>
-          <CardHeader>
-            <CardTitle className=' flex items-center justify-between'>
-              <div className='flex items-center'>
-                <span className='mr-3'>{name} </span>
-                {visibility === false && <EyeOff />}
+      <Card className='my-2 text-left' onClick={handleCardClick}>
+        <CardHeader>
+          <CardTitle className='flex items-center justify-between'>
+            <div className='flex items-center'>
+              <span className='mr-3'>{name} </span>
+              {visibility === false && <EyeOff />}
+            </div>
+            {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
+              <div className='self-end' onClick={(e) => e.stopPropagation()}>
+                <Dialog open={isOpenEdit} onOpenChange={setIsOpenEdit}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant={'outline'}
+                      className='px-4 mr-1'
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Edit
+                    </Button>
+                  </DialogTrigger>
+                  <EditAssignment
+                    assignmentId={id}
+                    onOpenChange={setIsOpenEdit}
+                    queryKey={queryKey}
+                  />
+                </Dialog>
+                <Dialog open={isOpenDelete} onOpenChange={setIsOpenDelete}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant={'destructive'}
+                      className='px-4'
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Delete
+                    </Button>
+                  </DialogTrigger>
+                  <RemoveAssignment
+                    assignmentId={id}
+                    onOpenChange={setIsOpenDelete}
+                    queryKey={queryKey}
+                  />
+                </Dialog>
               </div>
-              {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-                <div className='self-end' onClick={(e) => e.stopPropagation()}>
-                  <Dialog open={isOpenEdit} onOpenChange={setIsOpenEdit}>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant={'outline'}
-                        className='px-4 mr-1'
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Edit
-                      </Button>
-                    </DialogTrigger>
-                    <EditAssignment
-                      assignmentId={id}
-                      onOpenChange={setIsOpenEdit}
-                    />
-                  </Dialog>
-                  <Dialog open={isOpenDelete} onOpenChange={setIsOpenDelete}>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant={'destructive'}
-                        className='px-4'
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        Delete
-                      </Button>
-                    </DialogTrigger>
-                    <RemoveAssignment
-                      assignmentId={id}
-                      onOpenChange={setIsOpenDelete}
-                    />
-                  </Dialog>
-                </div>
-              )}
-            </CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Badge variant='outline' className={cardColor}>
-              Due to: {new Date(deadlineDate).toLocaleString()}
-            </Badge>
-          </CardContent>
-        </Card>
-      </DialogTrigger>
+            )}
+          </CardTitle>
+          <CardDescription>{description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Badge variant='outline' className={cardColor}>
+            Due to: {new Date(deadlineDate).toLocaleString()}
+          </Badge>
+        </CardContent>
+      </Card>
       <DialogContent>
-        {loggedUserInfo?.roleId === TEACHER_ROLE_ID &&
-          isOpen &&
-          goToAssignment()}
         <SubmitAssignment assignmentID={id} onOpenChange={setIsOpen} />
       </DialogContent>
     </Dialog>

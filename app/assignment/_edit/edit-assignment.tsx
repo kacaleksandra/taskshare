@@ -13,7 +13,7 @@ import { Input } from '@/app/_components/input';
 import Loader from '@/app/_components/loader';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -22,11 +22,15 @@ import { editAssignment, getAssignmentInfo } from './_api/client';
 
 function EditAssignment({
   assignmentId,
+  queryKey,
   onOpenChange,
 }: {
   assignmentId: number;
+  queryKey: string;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) {
+  const queryClient = useQueryClient();
+
   const [shouldRender, setShouldRender] = useState(false);
   const formSchema = z.object({
     name: z.string().min(1, { message: 'Assignment name is required' }),
@@ -47,12 +51,13 @@ function EditAssignment({
     },
   });
 
-  const { mutate: createNewAssignment } = useMutation({
+  const { mutate: editAssignmentMutation } = useMutation({
     mutationFn: editAssignment,
     onError: () => {
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async () => {
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
       onOpenChange(false);
     },
   });
@@ -80,7 +85,8 @@ function EditAssignment({
       ...values,
       deadlineDate: new Date(values.deadlineDate).toISOString(),
     };
-    createNewAssignment([assignmentId, dataToSend]);
+
+    editAssignmentMutation([assignmentId, dataToSend]);
   }
 
   return (
@@ -138,7 +144,7 @@ function EditAssignment({
               )}
             />
             <Button type='submit' className='w-full mt-4'>
-              Create
+              Edit
             </Button>
           </form>
         </Form>

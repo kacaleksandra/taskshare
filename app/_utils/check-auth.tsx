@@ -1,5 +1,6 @@
 'use client';
 
+import { useCookies } from 'next-client-cookies';
 import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 
@@ -11,6 +12,7 @@ const CheckAuth = ({ children }: { children: ReactNode }) => {
   const updateUserInfoStore = UseStoredUserInfo((state) => state.update);
   const pathName = usePathname();
   const router = useRouter();
+  const cookies = useCookies();
 
   useEffect(() => {
     async function fetchData() {
@@ -20,17 +22,18 @@ const CheckAuth = ({ children }: { children: ReactNode }) => {
         pathName === '/'
       )
         return;
-      const data = await getUserInfo();
-      if (!data) {
-        toast({ description: 'Your login session expired.' });
-        router.push('/sign-in');
+
+      try {
+        const data = await getUserInfo();
+        updateUserInfoStore(data);
+      } catch (e) {
+        cookies.remove('session');
       }
-      updateUserInfoStore(data);
     }
     fetchData();
 
     return () => {};
-  }, [updateUserInfoStore, router, pathName]);
+  }, [updateUserInfoStore, router, pathName, cookies]);
 
   return <>{children}</>;
 };
