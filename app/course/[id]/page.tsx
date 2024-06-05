@@ -7,8 +7,8 @@ import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/zustand';
 import AssignmentMini from '@/app/assignment/_components/assignmentMini';
 import CreateAssignment from '@/app/assignment/_create/create-assignment';
 import { TEACHER_ROLE_ID } from '@/constants';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 
 import EditCourse from '../_edit/edit-course';
 import {
@@ -24,6 +24,11 @@ export default function Page({ params }: { params: { id: string } }) {
   const loggedUserInfo = UseStoredUserInfo(
     (state: UserInfoStore) => state.loggedUserInfo,
   );
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.clear();
+  }, []);
 
   const { data: tasks, isPending: tasksAreLoading } = useQuery({
     queryKey: ['assignments'],
@@ -37,7 +42,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      {!isPending && !tasksAreLoading ? (
+      {tasks !== undefined && courseInfo !== undefined ? (
         <div className='w-full flex flex-col justify-center items-center'>
           <div className='w-4/5 flex items-center justify-between'>
             <h2 className='text-left text-4xl my-8 font-bold'>
