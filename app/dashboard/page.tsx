@@ -1,55 +1,42 @@
 'use client';
 
-import { BIG_PAGE_SIZE } from '@/constants';
-import { useMutation } from '@tanstack/react-query';
+import { SMALL_PAGE_SIZE } from '@/constants';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 
 import { Button } from '../_components/button';
-import CourseMini from '../_components/course-mini';
 import { Input } from '../_components/input';
 import Loader from '../_components/loader';
-import { toast } from '../_utils/use-toast';
-import { CourseMiniProps, getAllCourses } from './_api/client';
+import { CourseResponse, getAllCourses } from './_api/client';
+import CourseCard from './_components/course-card';
 
 const Page: React.FC = () => {
-  const [courses, setCourses] = useState<CourseMiniProps[]>([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  let searchParams: string = '';
+  const [searchParams, setSearchParams] = useState<string>('');
+  const queryClient = useQueryClient();
 
-  const { mutate: reloadCourses, status } = useMutation({
-    mutationFn: getAllCourses,
-    onError: () => {
-      toast({ description: 'Something went wrong. Please try again.' });
-    },
-    onSuccess: async (response) => {
-      setCourses(response.items);
-      setTotalPages(response.totalPages);
-    },
+  const { data: courses, isPending } = useQuery<CourseResponse>({
+    queryKey: ['allCourses', pageNumber, searchParams],
+    queryFn: () =>
+      getAllCourses({
+        pageSize: SMALL_PAGE_SIZE,
+        pageNumber,
+        searchParams,
+      }),
   });
 
-  useEffect(() => {
-    reloadCourses({
-      pageSize: BIG_PAGE_SIZE,
-      pageNumber: pageNumber,
-      searchParams: searchParams,
-    });
-  }, [pageNumber, reloadCourses, searchParams]);
-
-  if (status !== 'success' && status !== 'error') {
-    return <Loader />;
-  }
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams(event.target.value);
+    queryClient.invalidateQueries({ queryKey: ['allCourses'] });
+    console.log(courses);
+    setTotalPages(courses?.totalPages || 1);
     setPageNumber(1);
-    searchParams = event.currentTarget.search.value;
-    reloadCourses({
-      pageSize: BIG_PAGE_SIZE,
-      pageNumber: 1,
-      searchParams: event.currentTarget.search.value,
-    });
   };
+
+  useEffect(() => {
+    setTotalPages(courses?.totalPages || 1);
+  }, [courses]);
 
   return (
     <>
@@ -58,17 +45,30 @@ const Page: React.FC = () => {
           <h2 className='w-4/5 text-left text-4xl m-4 font-bold'>
             All Courses
           </h2>
-          {courses.length !== 0 ? (
+          <form className='w-4/5 flex' onSubmit={(e) => e.preventDefault()}>
+            <Input
+              type='text'
+              placeholder='Search'
+              name='search'
+              value={searchParams}
+              onChange={handleChange}
+            />
+          </form>
+          {isPending && <Loader />}
+          {!isPending && courses?.items.length !== 0 && (
+            <>
+              {courses?.items.length === 0 && (
+                <div className='flex items-center flex-col my-8 '>
+                  <p className='text-center text-lg'>No courses found.</p>
+                </div>
+              )}
+            </>
+          )}
+          {courses !== undefined && courses.items.length > 0 && (
             <div className='w-full flex items-center flex-col'>
-              <form className='w-4/5 flex' onSubmit={handleSubmit}>
-                <Input type='text' placeholder='Search' name='search' />
-                <Button type='submit' className='ml-1'>
-                  Search
-                </Button>
-              </form>
-              {courses.map((course) => (
+              {courses?.items.map((course) => (
                 <div className='w-4/5' key={course.id}>
-                  <CourseMini {...course} />
+                  <CourseCard {...course} queryKey='allCourses' />
                 </div>
               ))}
               <div className='flex justify-center'>
@@ -99,8 +99,6 @@ const Page: React.FC = () => {
                 </Button>
               </div>
             </div>
-          ) : (
-            <p className='my-4 font-normal text-lg'> No courses available. </p>
           )}
         </div>
       </div>

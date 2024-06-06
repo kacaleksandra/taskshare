@@ -15,7 +15,7 @@ export const getCourseMembers = async (courseID: number) => {
 export const acceptStudentClient = async (courseID: number, userId: number) => {
   const res = await clientFetch(`/course/accept`, {
     method: 'PUT',
-    body: JSON.stringify({ courseID, userId }),
+    body: JSON.stringify({ courseId: courseID, userId: userId }),
   });
 
   if (!res.ok) {
@@ -26,7 +26,7 @@ export const acceptStudentClient = async (courseID: number, userId: number) => {
 export const removeStudentClient = async (courseID: number, userId: number) => {
   const res = await clientFetch(`/course/remove`, {
     method: 'PUT',
-    body: JSON.stringify({ courseID, userId }),
+    body: JSON.stringify({ courseId: courseID, userId: userId }),
   });
 
   if (!res.ok) {

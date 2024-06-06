@@ -1,4 +1,4 @@
-import { FileCheckIcon, UsersIcon } from 'lucide-react';
+import { FileCheckIcon, NotebookTextIcon, UsersIcon } from 'lucide-react';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
@@ -39,6 +39,17 @@ const TeacherDashboard = async () => {
             <UsersIcon /> Check members of your courses
           </h2>
           <p className='py-4'>See list with your courses and manage members.</p>
+        </Link>
+        <Link
+          href='/submitted-works'
+          className='text-white border border-blue-400 bg-gradient-to-br from-blue-600 to-blue-400 shadow-lg rounded-lg px-4 py-4 flex flex-col'
+        >
+          <h2 className='text-center font-medium text-lg mt-2'>
+            <NotebookTextIcon /> Check submitted works
+          </h2>
+          <p className='py-4'>
+            See list with your courses and every submitted work.
+          </p>
         </Link>
       </div>
     </div>

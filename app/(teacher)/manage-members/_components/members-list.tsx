@@ -1,16 +1,10 @@
 'use client';
 
-import { Button } from '@/app/_components/button';
-import {
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@/app/_components/dialog';
+import { DialogContent, DialogTitle } from '@/app/_components/dialog';
 import { ScrollArea } from '@/app/_components/scroll-area';
 import { toast } from '@/app/_utils/use-toast';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Check, X } from 'lucide-react';
-import { Dispatch, SetStateAction } from 'react';
 
 import {
   acceptStudentClient,
@@ -20,18 +14,19 @@ import {
 
 function MembersListDialog({
   courseId,
-  onOpenChange,
+  isOpen,
   queryKey,
 }: {
   courseId: number;
-  onOpenChange: Dispatch<SetStateAction<boolean>>;
+  isOpen: boolean;
   queryKey?: string;
 }) {
   const queryClient = useQueryClient();
 
-  const { data, isPending } = useQuery({
+  const { data } = useQuery({
     queryKey: ['members'],
     queryFn: () => getCourseMembers(courseId),
+    enabled: isOpen,
   });
 
   const { mutate: acceptStudent } = useMutation({
@@ -41,7 +36,6 @@ function MembersListDialog({
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async () => {
-      onOpenChange(false);
       if (queryKey) queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
@@ -53,7 +47,6 @@ function MembersListDialog({
       toast({ description: 'Something went wrong. Please try again.' });
     },
     onSuccess: async () => {
-      onOpenChange(false);
       if (queryKey) queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
@@ -64,7 +57,9 @@ function MembersListDialog({
       <div className='w-full'>
         <h3 className='text-center text-lg font-medium'>Pending users</h3>
         {data?.pendingUsers.length === 0 ? (
-          <p className='py-4 text-gray-400 text-sm'>No pending users.</p>
+          <p className='py-4 text-gray-400 text-sm text-center'>
+            No pending users.
+          </p>
         ) : (
           <ScrollArea className='w-full max-h-48'>
             {data?.pendingUsers.map((user: any) => (
@@ -72,16 +67,20 @@ function MembersListDialog({
                 key={user.id}
                 className='flex justify-between py-4 border-b-2'
               >
-                <p>
+                <p className='w-3/4'>
                   {user.name} {user.lastname}: {user.email}
                 </p>
                 <Check
                   className='text-green-700  cursor-pointer'
-                  onClick={() => acceptStudent(data.id, user.id)}
+                  onClick={() =>
+                    acceptStudent({ courseId: data.id, userId: user.id })
+                  }
                 />
                 <X
                   className='text-red-600  cursor-pointer'
-                  onClick={() => removeStudent(data.id, user.id)}
+                  onClick={() =>
+                    removeStudent({ courseId: data.id, userId: user.id })
+                  }
                 />
               </div>
             ))}
@@ -91,7 +90,9 @@ function MembersListDialog({
       <div className='w-full'>
         <h3 className='text-center text-lg font-medium'>Enrolled users</h3>
         {data?.enrolledUsers.length === 0 ? (
-          <p className='py-4  text-gray-400 text-sm'>No enrolled users.</p>
+          <p className='py-4  text-gray-400 text-sm text-center'>
+            No enrolled users.
+          </p>
         ) : (
           <ScrollArea className='w-full max-h-48'>
             {data?.enrolledUsers.map((user: any) => (
@@ -99,12 +100,14 @@ function MembersListDialog({
                 key={user.id}
                 className='flex justify-between w-full grow py-4 border-b-2'
               >
-                <p>
+                <p className='w-3/4'>
                   {user.name} {user.lastname}: {user.email}
                 </p>
                 <X
                   className='text-red-600  cursor-pointer'
-                  onClick={() => removeStudent(data.id, user.id)}
+                  onClick={() =>
+                    removeStudent({ courseId: data.id, userId: user.id })
+                  }
                 />
               </div>
             ))}

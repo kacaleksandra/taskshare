@@ -10,6 +10,7 @@ export interface CourseMiniProps {
   name: string;
   iconPath: string;
   approvalStatus: number;
+  queryKey?: string;
   yearStart: number;
   owner: {
     id: number;
@@ -45,5 +46,15 @@ export const getAllCourses = async (
     throw new Error('Failed to get courses');
   } else {
     return res.json();
+  }
+};
+
+export const sendRequestToJoinCourse = async (courseId: number) => {
+  const res = await clientFetch(`/course/join/${courseId}`, {
+    method: 'PUT',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to send request');
   }
 };

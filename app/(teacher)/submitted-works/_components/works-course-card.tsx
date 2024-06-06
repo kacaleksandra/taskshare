@@ -8,13 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/app/_components/card';
-import { Dialog, DialogTrigger } from '@/app/_components/dialog';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
 
-import MembersListDialog from './members-list';
-
-const CourseCard = ({
+const WorksCourseCard = ({
   id,
   name,
   yearStart,
@@ -24,7 +20,6 @@ const CourseCard = ({
   yearStart: number;
 }) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Card className='my-2 cursor-pointer flex flex-row justify-between items-center pr-6'>
@@ -42,15 +37,14 @@ const CourseCard = ({
         </CardFooter>
       </div>
       <div className='flex gap-2 flex-col'>
-        <Dialog onOpenChange={setIsOpen} open={isOpen}>
-          <DialogTrigger asChild>
-            <Button>Manage members</Button>
-          </DialogTrigger>
-          <MembersListDialog courseId={id} queryKey='members' isOpen={isOpen} />
-        </Dialog>
+        <Button
+          onClick={() => router.push(`/submitted-works/assignments/${id}`)}
+        >
+          Check assignments and works
+        </Button>
       </div>
     </Card>
   );
 };
 
-export default CourseCard;
+export default WorksCourseCard;
