@@ -78,7 +78,7 @@ function EditAssignment({
 
   useEffect(() => {
     getPreviousAssignmentInfo(assignmentId);
-  }, []);
+  }, [getPreviousAssignmentInfo, assignmentId]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const dataToSend = {

@@ -28,7 +28,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     queryClient.clear();
-  }, []);
+  }, [queryClient]);
 
   const { data: tasks, isPending: tasksAreLoading } = useQuery({
     queryKey: ['assignments'],

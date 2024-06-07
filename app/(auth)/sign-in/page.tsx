@@ -67,7 +67,7 @@ function SignInPage() {
 
   useEffect(() => {
     cookies.remove('session');
-  }, []);
+  }, [cookies]);
 
   return (
     <>

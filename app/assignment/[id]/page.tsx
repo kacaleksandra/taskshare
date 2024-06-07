@@ -77,7 +77,12 @@ export default function Page({ params }: { params: { id: string } }) {
       loadAllSubmisions(parseInt(params.id));
     }
     loadAssignmentInfo(parseInt(params.id));
-  }, []);
+  }, [
+    loadAllSubmisions,
+    loadAssignmentInfo,
+    loggedUserInfo?.roleId,
+    params.id,
+  ]);
 
   return (
     <>
@@ -95,6 +100,7 @@ export default function Page({ params }: { params: { id: string } }) {
               </h3>
               {submissions.map((submision) => (
                 <SubmissionMini
+                  key={submision.id}
                   {...submision}
                   downloadedFileName={`${submision.user.name}_${submision.user.name}_${params.id}`}
                 />
@@ -106,6 +112,7 @@ export default function Page({ params }: { params: { id: string } }) {
               <div className='w-full items-center flex flex-col'>
                 {submissions.map((submision) => (
                   <SubmissionMini
+                    key={submision.id}
                     {...submision}
                     downloadedFileName={`Assignment_${params.id}`}
                   />

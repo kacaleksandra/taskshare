@@ -83,7 +83,7 @@ function EditCourse({
 
   useEffect(() => {
     getPreviousCourseInfo(courseId);
-  }, []);
+  }, [getPreviousCourseInfo, courseId]);
 
   return (
     shouldRender && (
