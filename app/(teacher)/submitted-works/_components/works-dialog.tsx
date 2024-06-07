@@ -3,6 +3,7 @@
 import { DialogContent, DialogTitle } from '@/app/_components/dialog';
 import Loader from '@/app/_components/loader';
 import { ScrollArea } from '@/app/_components/scroll-area';
+import { downloadFile } from '@/app/assignment/[id]/_api/client';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 
@@ -72,10 +73,21 @@ function WorksDialog({
                     {format(submission.lastEdit, 'dd-MM-yyyy HH:mm')}
                   </p>
                 </div>
-                {/* add downloading this files */}
-                <div className='w-4/12  text-right'>
+                <div className='w-4/12  text-right hover:underline hover:cursor-pointer'>
                   {submission.files.map((file) => (
-                    <p key={file.id}>{file.fileName}</p>
+                    <a
+                      className='text-blue-500'
+                      onClick={() => {
+                        downloadFile({
+                          submissionID: submission.id,
+                          fileID: file.id,
+                          downloadedFileName: file.fileName,
+                        });
+                      }}
+                      key={file.id}
+                    >
+                      {file.fileName}
+                    </a>
                   ))}
                 </div>
               </div>
