@@ -13,13 +13,21 @@ export interface File {
   fileName: string;
 }
 
+export interface UserInfo {
+  id: number;
+  name: string;
+  lastname: string;
+  roleId: number;
+  statusId: number;
+}
+
 export interface AssignmentInfo {
   files: File[];
   id: number;
   lastEdit: Date;
   studentComment: string;
   submissionDateTime: Date;
-  userId: number;
+  user: UserInfo;
 }
 
 function WorksDialog({
@@ -53,18 +61,19 @@ function WorksDialog({
                 key={submission.id}
                 className='flex flex-row justify-between border-b border-gray-300 py-1'
               >
-                <div className='w-1/12'>
-                  {/* it will change to name and surname when backend will be ready for it*/}
-                  <p>{submission.userId}</p>
+                <div className='w-3/12'>
+                  <p>
+                    {submission.user.name} {submission.user.lastname}
+                  </p>
                 </div>
-                <div className='w-6/12 text-center'>
+                <div className='w-5/12 text-center'>
                   <p>{submission.studentComment}</p>
                   <p className='text-gray-400 text-sm pt-1'>
                     {format(submission.lastEdit, 'dd-MM-yyyy HH:mm')}
                   </p>
                 </div>
                 {/* add downloading this files */}
-                <div className='w-5/12  text-right'>
+                <div className='w-4/12  text-right'>
                   {submission.files.map((file) => (
                     <p key={file.id}>{file.fileName}</p>
                   ))}

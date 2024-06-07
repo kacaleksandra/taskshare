@@ -89,6 +89,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 </Dialog>
               )}
             </div>
+            {tasks.length === 0 && <p className='mt-8'>No assignments yet.</p>}
             {tasks?.map((task) => (
               <div className='w-4/5 cursor-pointer' key={task.id}>
                 <AssignmentMini {...task} queryKey='assignments' />
