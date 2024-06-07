@@ -22,7 +22,12 @@ import React, { Dispatch } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { makeSubmission, submitFiles } from './_api/client';
+import {
+  changeSubmission,
+  deleteFiles,
+  makeSubmission,
+  submitFiles,
+} from './_api/client';
 
 const formSchema = z.object({
   studentComment: z.string(),
@@ -44,31 +49,57 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const SubmitAssignment = ({
+const UpdateAssignment = ({
   onOpenChange,
-  assignmentID,
+  submissionID,
+  fileID,
+  studentComment,
 }: {
   onOpenChange?: Dispatch<React.SetStateAction<boolean>>;
-  assignmentID: number;
+  submissionID: number;
+  fileID: number;
+  studentComment: string;
 }) => {
   const onSubmit = (data: FormData) => {
     // Submit data to API
-    submitAssignmentNew({ assignmentID, studentComment: data.studentComment });
+    submitAssignmentChanged({
+      submissionID,
+      studentComment: data.studentComment,
+    });
 
     //to bedzie trzeba dac na onSuccess w mutacji
     if (onOpenChange) onOpenChange(false);
   };
 
-  const { mutate: submitAssignmentNew } = useMutation({
-    mutationFn: makeSubmission,
+  const { mutate: submitAssignmentChanged } = useMutation({
+    mutationFn: changeSubmission,
     onError: () => {
       toast({
         description: 'Failed to make new submission, please try again later.',
       });
     },
-    onSuccess: async (response) => {
+    onSuccess: async () => {
+      if (fileID !== 0) {
+        deleteFile({ submissionID, fileID });
+      } else {
+        submitFilesNew({
+          submissionID,
+          files: form.getValues().requestFiles,
+        });
+      }
+    },
+  });
+
+  const { mutate: deleteFile } = useMutation({
+    mutationFn: deleteFiles,
+    onError: () => {
+      toast({
+        description: 'Failed to delete old files, please try again later.',
+      });
+    },
+    onSuccess: async () => {
       submitFilesNew({
-        submissionID: response,
+        submissionID,
         files: form.getValues().requestFiles,
       });
     },
@@ -89,7 +120,7 @@ const SubmitAssignment = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      studentComment: '',
+      studentComment: studentComment || '',
       requestFiles: [],
     },
   });
@@ -97,7 +128,7 @@ const SubmitAssignment = ({
   return (
     <>
       <div className='flex items-center flex-col gap-8 justify-center my-6'>
-        <h2 className='text-xl font-semibold'>Submit your assignment</h2>
+        <h2 className='text-xl font-semibold'>Override submission</h2>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -145,4 +176,4 @@ const SubmitAssignment = ({
   );
 };
 
-export default SubmitAssignment;
+export default UpdateAssignment;

@@ -28,6 +28,7 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
   deadlineDate,
   description,
   queryKey,
+  isSubmitted,
 }) => {
   const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo(
@@ -58,7 +59,7 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
 
   const handleCardClick = (e: React.MouseEvent) => {
     if (e.target instanceof HTMLElement && e.target.tagName !== 'BUTTON') {
-      if (loggedUserInfo?.roleId === 2) {
+      if (loggedUserInfo?.roleId === 2 || isSubmitted) {
         goToAssignment();
       } else {
         setIsOpen(true);

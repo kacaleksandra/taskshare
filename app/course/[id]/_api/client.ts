@@ -7,6 +7,7 @@ export interface AssignmentMiniProps {
   deadlineDate: string;
   description: string;
   queryKey: string;
+  isSubmitted?: boolean;
 }
 export type AssigmentResponse = AssignmentMiniProps[];
 
