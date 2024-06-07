@@ -5,7 +5,7 @@ export type LoggedUserInfo = {
   email: string;
   name: string;
   lastname: string;
-  roleId: 2 | 3;
+  roleId: number;
 };
 
 export type UserInfoStore = {

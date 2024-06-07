@@ -4,6 +4,7 @@ import { SMALL_PAGE_SIZE } from '@/constants';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import React, { useEffect, useState } from 'react';
 
+import { UserInfo, getUserInfo } from '../(auth)/sign-in/_api/client';
 import { Button } from '../_components/button';
 import { Input } from '../_components/input';
 import Loader from '../_components/loader';
@@ -15,6 +16,11 @@ const Page: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchParams, setSearchParams] = useState<string>('');
   const queryClient = useQueryClient();
+
+  const { data: userInfo, isPending: userInfoIsPending } = useQuery<UserInfo>({
+    queryKey: ['userInfo'],
+    queryFn: getUserInfo,
+  });
 
   const { data: courses, isPending } = useQuery<CourseResponse>({
     queryKey: ['allCourses', pageNumber, searchParams],
@@ -54,51 +60,57 @@ const Page: React.FC = () => {
               onChange={handleChange}
             />
           </form>
-          {isPending && <Loader />}
-          {!isPending && courses?.items.length !== 0 && (
+          {(isPending || userInfoIsPending) && <Loader />}
+          {!isPending && !userInfoIsPending && courses && userInfo && (
             <>
               {courses?.items.length === 0 && (
-                <div className='flex items-center flex-col my-8 '>
+                <div className='flex items-center flex-col my-8'>
                   <p className='text-center text-lg'>No courses found.</p>
                 </div>
               )}
-            </>
-          )}
-          {courses !== undefined && courses.items.length > 0 && (
-            <div className='w-full flex items-center flex-col'>
-              {courses?.items.map((course) => (
-                <div className='w-4/5' key={course.id}>
-                  <CourseCard {...course} queryKey='allCourses' />
+              {courses?.items.length > 0 && (
+                <div className='w-full flex items-center flex-col'>
+                  {courses?.items.map((course) => (
+                    <div className='w-4/5' key={course.id}>
+                      <CourseCard
+                        {...course}
+                        queryKey='allCourses'
+                        roleId={userInfo.roleId}
+                      />
+                    </div>
+                  ))}
+                  <div className='flex justify-center'>
+                    <Button
+                      variant={pageNumber > 1 ? 'default' : 'secondary'}
+                      className='m-4'
+                      onClick={() => {
+                        if (pageNumber > 1) {
+                          setPageNumber(pageNumber - 1);
+                        }
+                      }}
+                    >
+                      ←
+                    </Button>
+                    <span className='m-6'>
+                      {pageNumber} of {totalPages}
+                    </span>
+                    <Button
+                      variant={
+                        pageNumber < totalPages ? 'default' : 'secondary'
+                      }
+                      className='m-4'
+                      onClick={() => {
+                        if (pageNumber < totalPages) {
+                          setPageNumber(pageNumber + 1);
+                        }
+                      }}
+                    >
+                      →
+                    </Button>
+                  </div>
                 </div>
-              ))}
-              <div className='flex justify-center'>
-                <Button
-                  variant={pageNumber > 1 ? 'default' : 'secondary'}
-                  className='m-4'
-                  onClick={() => {
-                    if (pageNumber > 1) {
-                      setPageNumber(pageNumber - 1);
-                    }
-                  }}
-                >
-                  ←
-                </Button>
-                <span className='m-6'>
-                  {pageNumber} of {totalPages}
-                </span>
-                <Button
-                  variant={pageNumber < totalPages ? 'default' : 'secondary'}
-                  className='m-4'
-                  onClick={() => {
-                    if (pageNumber < totalPages) {
-                      setPageNumber(pageNumber + 1);
-                    }
-                  }}
-                >
-                  →
-                </Button>
-              </div>
-            </div>
+              )}
+            </>
           )}
         </div>
       </div>

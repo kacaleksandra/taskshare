@@ -5,7 +5,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 
 import { getUserInfo } from '../(auth)/sign-in/_api/client';
-import { toast } from './use-toast';
 import { UseStoredUserInfo } from './zustand';
 
 const CheckAuth = ({ children }: { children: ReactNode }) => {
@@ -26,6 +25,8 @@ const CheckAuth = ({ children }: { children: ReactNode }) => {
       try {
         const data = await getUserInfo();
         updateUserInfoStore(data);
+        if (data.statusId === 2 && data.roleId === 2)
+          router.push('/waiting-for-approval');
       } catch (e) {
         cookies.remove('session');
       }

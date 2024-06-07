@@ -12,6 +12,7 @@ export interface CourseMiniProps {
   approvalStatus: number;
   queryKey?: string;
   yearStart: number;
+  roleId: number;
   owner: {
     id: number;
     email: string;

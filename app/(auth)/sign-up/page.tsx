@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -32,7 +32,6 @@ const LABEL_STYLES = {
 function SignUpPage() {
   const router = useRouter();
 
-  const [shouldRender, setShouldRender] = useState(false);
   const [role, setRole] = useState<boolean>(false);
 
   const formSchema = z
@@ -52,7 +51,7 @@ function SignUpPage() {
       },
       {
         message: 'Passwords must match.',
-        path: ['confirmPassword'],
+        path: ['confirmedPassword'],
       },
     );
 

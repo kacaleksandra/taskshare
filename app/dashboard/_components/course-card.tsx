@@ -28,6 +28,7 @@ const CourseCard: React.FC<CourseMiniProps> = ({
   owner,
   approvalStatus,
   yearStart,
+  roleId,
 }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -73,7 +74,7 @@ const CourseCard: React.FC<CourseMiniProps> = ({
   });
 
   const isApproved = approvalStatus === 1 || approvalStatus === 3;
-  const canSendRequest = approvalStatus === 0;
+  const canSendRequest = approvalStatus === 0 && roleId !== 2;
 
   return (
     <Card

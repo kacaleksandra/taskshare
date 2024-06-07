@@ -6,6 +6,7 @@ interface GetUserInfoResponse {
   name: string;
   lastname: string;
   roleId: number;
+  statusId: number;
 }
 
 export async function getUserInfoServer() {

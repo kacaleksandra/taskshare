@@ -1,1 +1,1 @@
-export const notRestrictedPaths = ['/sign-in', '/sign-up', '/'];
+export const notRestrictedPaths = ['/sign-in', '/sign-up', '/', '/success'];

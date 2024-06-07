@@ -5,6 +5,15 @@ interface LoginUser {
   password: string;
 }
 
+export interface UserInfo {
+  id: number;
+  email: string;
+  name: string;
+  lastname: string;
+  roleId: number;
+  statusId: number;
+}
+
 export const loginUserClient = async (body: LoginUser) => {
   const res = await clientFetch('/account/login/', {
     method: 'POST',
@@ -26,6 +35,6 @@ export const getUserInfo = async () => {
   if (!res.ok) {
     throw new Error('User not logged in');
   } else {
-    return res.json();
+    return res.json() as Promise<UserInfo>;
   }
 };
