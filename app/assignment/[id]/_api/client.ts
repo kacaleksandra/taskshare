@@ -52,7 +52,7 @@ export type Submission = {
 
 type Fajel = {
   id: number;
-  fileName: string
+  fileName: string;
 };
 
 export const getAllSubmitions = async (
@@ -83,18 +83,15 @@ export const getMySubmitions = async (
   }
 };
 
-export const downloadFile = async (
-  {
-    submissionID,
-    fileID,
-    downloadedFileName,
-  }:
-  {
-    submissionID : number,
-    fileID: number,
-    downloadedFileName: string,
-  }
-): Promise<void> => {
+export const downloadFile = async ({
+  submissionID,
+  fileID,
+  downloadedFileName,
+}: {
+  submissionID: number;
+  fileID: number;
+  downloadedFileName: string;
+}): Promise<void> => {
   const res = await clientFetch(`/submission/${submissionID}/file/${fileID}`, {
     method: 'GET',
   });
@@ -106,11 +103,11 @@ export const downloadFile = async (
   const disposition = res.headers.get('Content-Disposition');
   let filename = downloadedFileName ?? 'downloaded-file';
   if (disposition && disposition.indexOf('attachment') !== -1) {
-      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      const matches = filenameRegex.exec(disposition);
-      if (matches != null && matches[1]) { 
-          filename = matches[1].replace(/['"]/g, '');
-      }
+    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = filenameRegex.exec(disposition);
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '');
+    }
   }
 
   // Convert the response to a Blob
@@ -118,7 +115,7 @@ export const downloadFile = async (
 
   // Create a link element
   const link = document.createElement('a');
-  
+
   // Create a URL for the Blob and set it as the href attribute
   const url = window.URL.createObjectURL(blob);
   link.href = url;

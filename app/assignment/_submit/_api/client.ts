@@ -43,30 +43,40 @@ export const submitFiles = async (data: submissionFile): Promise<{}> => {
   }
 };
 
-export const changeSubmission = async (
-    {submissionID, studentComment}:{submissionID:number,studentComment:string}
-  ): Promise<void> => {
-    const res = await clientFetch(`/submission/${submissionID}`, {
-      method: 'PUT',
-      body: JSON.stringify({studentComment: studentComment}),
-    });
-  
-    if (!res.ok) {
-      throw new Error('Failed to change submission');
-    } else {
-      return;
-    }
-  };
-  
-  export const deleteFiles = async ({submissionID, fileID}:{submissionID:number,fileID:number}): Promise<{}> => {
-    const res = await clientFetch(`/submission/${submissionID}/file/${fileID}`, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-      method: 'DELETE'
-    });
-  
-    if (!res.ok) {
-      throw new Error('Failed to delete file');
-    } else {
-      return res;
-    }
-  };
+export const changeSubmission = async ({
+  submissionID,
+  studentComment,
+}: {
+  submissionID: number;
+  studentComment: string;
+}): Promise<void> => {
+  const res = await clientFetch(`/submission/${submissionID}`, {
+    method: 'PUT',
+    body: JSON.stringify({ studentComment: studentComment }),
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to change submission');
+  } else {
+    return;
+  }
+};
+
+export const deleteFiles = async ({
+  submissionID,
+  fileID,
+}: {
+  submissionID: number;
+  fileID: number;
+}): Promise<{}> => {
+  const res = await clientFetch(`/submission/${submissionID}/file/${fileID}`, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+    method: 'DELETE',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to delete file');
+  } else {
+    return res;
+  }
+};
