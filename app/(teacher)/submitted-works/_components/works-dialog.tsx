@@ -54,7 +54,7 @@ function WorksDialog({
       <div className='w-full'>
         {isPending && <Loader />}
         {data && !isPending && data.length === 0 ? (
-          <p>No submissions.</p>
+          <p className='text-center'>No submissions.</p>
         ) : (
           <ScrollArea className='max-h-64'>
             {data?.map((submission) => (

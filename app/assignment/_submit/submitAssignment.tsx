@@ -1,12 +1,5 @@
 import { Button } from '@/app/_components/button';
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/app/_components/card';
-import { DialogFooter, DialogTitle } from '@/app/_components/dialog';
-import {
   Form,
   FormControl,
   FormField,
@@ -17,7 +10,7 @@ import {
 import { Input } from '@/app/_components/input';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { Dispatch } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -47,10 +40,13 @@ type FormData = z.infer<typeof formSchema>;
 const SubmitAssignment = ({
   onOpenChange,
   assignmentID,
+  queryKey,
 }: {
   onOpenChange?: Dispatch<React.SetStateAction<boolean>>;
   assignmentID: number;
+  queryKey: string;
 }) => {
+  const queryClient = useQueryClient();
   const onSubmit = (data: FormData) => {
     // Submit data to API
     submitAssignmentNew({ assignmentID, studentComment: data.studentComment });
@@ -71,6 +67,7 @@ const SubmitAssignment = ({
         submissionID: response,
         files: form.getValues().requestFiles,
       });
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { Button } from '@/app/_components/button';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const SignUpSuccessPage = () => {

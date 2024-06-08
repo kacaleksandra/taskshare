@@ -15,18 +15,9 @@ const CheckAuth = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchData() {
-      if (
-        pathName === '/sign-in' ||
-        pathName === '/sign-up' ||
-        pathName === '/'
-      )
-        return;
-
       try {
         const data = await getUserInfo();
         updateUserInfoStore(data);
-        if (data.statusId === 2 && data.roleId === 2)
-          router.push('/waiting-for-approval');
       } catch (e) {
         cookies.remove('session');
       }

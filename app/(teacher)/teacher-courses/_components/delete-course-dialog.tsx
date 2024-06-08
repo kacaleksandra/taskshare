@@ -7,7 +7,6 @@ import {
   DialogTitle,
 } from '@/app/_components/dialog';
 import { toast } from '@/app/_utils/use-toast';
-import { editCourse } from '@/app/course/_edit/_api/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dispatch, SetStateAction } from 'react';
 

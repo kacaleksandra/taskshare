@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/app/_components/dialog';
 import { UseStoredUserInfo, UserInfoStore } from '@/app/_utils/zustand';
 import { AssignmentMiniProps } from '@/app/course/[id]/_api/client';
 import { TEACHER_ROLE_ID } from '@/constants';
-import { EyeOff } from 'lucide-react';
+import { CheckIcon, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -74,6 +74,7 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
           <CardTitle className='flex items-center justify-between'>
             <div className='flex items-center'>
               <span className='mr-3'>{name} </span>
+              {isSubmitted && <CheckIcon />}
               {visibility === false && <EyeOff />}
             </div>
             {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
@@ -122,7 +123,11 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
         </CardContent>
       </Card>
       <DialogContent>
-        <SubmitAssignment assignmentID={id} onOpenChange={setIsOpen} />
+        <SubmitAssignment
+          assignmentID={id}
+          onOpenChange={setIsOpen}
+          queryKey={queryKey}
+        />
       </DialogContent>
     </Dialog>
   );

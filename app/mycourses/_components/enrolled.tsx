@@ -2,15 +2,13 @@
 
 import Loader from '@/app/_components/loader';
 import { SMALL_PAGE_SIZE } from '@/constants';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { Button } from '../../_components/button';
 import CourseMini from '../../_components/course-mini';
 import { Input } from '../../_components/input';
-import { toast } from '../../_utils/use-toast';
 import {
-  CourseMiniProps,
   CourseResponse,
   getEnrolledCourses,
   getMyCoursesTeacher,
