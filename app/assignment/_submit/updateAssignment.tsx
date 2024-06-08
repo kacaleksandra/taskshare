@@ -17,17 +17,12 @@ import {
 import { Input } from '@/app/_components/input';
 import { toast } from '@/app/_utils/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { Dispatch } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  changeSubmission,
-  deleteFiles,
-  makeSubmission,
-  submitFiles,
-} from './_api/client';
+import { changeSubmission, deleteFiles, submitFiles } from './_api/client';
 
 const formSchema = z.object({
   studentComment: z.string(),
@@ -54,12 +49,15 @@ const UpdateAssignment = ({
   submissionID,
   fileID,
   studentComment,
+  queryKey,
 }: {
   onOpenChange?: Dispatch<React.SetStateAction<boolean>>;
   submissionID: number;
   fileID: number;
   studentComment: string;
+  queryKey: string;
 }) => {
+  const queryClient = useQueryClient();
   const onSubmit = (data: FormData) => {
     // Submit data to API
     submitAssignmentChanged({
@@ -87,6 +85,7 @@ const UpdateAssignment = ({
           files: form.getValues().requestFiles,
         });
       }
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
 

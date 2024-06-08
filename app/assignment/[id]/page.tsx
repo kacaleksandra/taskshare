@@ -1,13 +1,10 @@
 'use client';
 
-import { Button } from '@/app/_components/button';
 import { Card } from '@/app/_components/card';
 import Loader from '@/app/_components/loader';
-import { toast } from '@/app/_utils/use-toast';
 import { UseStoredUserInfo } from '@/app/_utils/zustand';
 import { STUDENT_ROLE_ID, TEACHER_ROLE_ID } from '@/constants';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import SubmissionMini from '../_components/submissionMini';
@@ -22,71 +19,46 @@ import {
 
 export default function Page({ params }: { params: { id: string } }) {
   const [isVisible, setIsVisible] = useState(false);
-  const router = useRouter();
   const loggedUserInfo = UseStoredUserInfo((state) => state.loggedUserInfo);
-  const [assignmentInfo, setAssignmentInfo] =
-    useState<AssignmentMiniProps | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
 
-  const { mutate: loadAllSubmisions } = useMutation({
-    mutationFn: getAllSubmitions,
-    onError: () => {
-      toast({
-        description: 'Failed to load submisions, please try again later.',
-      });
-    },
-    onSuccess: async (response) => {
-      setSubmissions(response);
-    },
-  });
-  const { mutate: loadAssignmentInfo } = useMutation({
-    mutationFn: getAssignmentInfo,
-    onError: () => {
-      toast({
-        description: 'Failed to load assignment info, please try again later.',
-      });
-      router.push('/dashboard');
-    },
-    onSuccess: async (response) => {
-      setAssignmentInfo(response);
-      if (loggedUserInfo?.roleId === TEACHER_ROLE_ID) {
-        setIsVisible(true);
-      }
-      if (loggedUserInfo?.roleId === STUDENT_ROLE_ID) {
-        loadMySubmission(response.submissionId ?? 0);
-      }
-    },
+  const { data: assignmentInfo, isPending: assignmentInfoIsPending } =
+    useQuery<AssignmentMiniProps | null>({
+      queryKey: ['assignmentInfo'],
+      queryFn: () => getAssignmentInfo(parseInt(params.id)),
+    });
+
+  const { data: allSubmissions } = useQuery<Submission[]>({
+    queryKey: ['allSubmissions'],
+    queryFn: () => getAllSubmitions(parseInt(params.id)),
+    enabled: loggedUserInfo?.roleId === TEACHER_ROLE_ID,
   });
 
-  const { mutate: loadMySubmission } = useMutation({
-    mutationFn: getMySubmitions,
-    onError: () => {
-      toast({
-        description: 'Failed to load assignment info, please try again later.',
-      });
-      router.push('/dashboard');
+  const { data: mySubmissions } = useQuery<Submission[]>({
+    queryKey: ['mySubmissions'],
+    queryFn: async () => {
+      const submission = await getMySubmitions(
+        assignmentInfo?.submissionId ?? 0,
+      );
+      return submission ? [submission] : [];
     },
-    onSuccess: async (response) => {
-      setSubmissions([response]);
-      setIsVisible(true);
-    },
+    enabled:
+      loggedUserInfo?.roleId !== TEACHER_ROLE_ID && !assignmentInfoIsPending,
   });
 
   useEffect(() => {
     if (loggedUserInfo?.roleId === TEACHER_ROLE_ID) {
-      loadAllSubmisions(parseInt(params.id));
+      setSubmissions(allSubmissions || []);
+      setIsVisible(true);
+    } else {
+      setSubmissions(mySubmissions || []);
+      setIsVisible(true);
     }
-    loadAssignmentInfo(parseInt(params.id));
-  }, [
-    loadAllSubmisions,
-    loadAssignmentInfo,
-    loggedUserInfo?.roleId,
-    params.id,
-  ]);
+  }, [allSubmissions, mySubmissions, loggedUserInfo?.roleId]);
 
   return (
     <>
-      {isVisible ? (
+      {!assignmentInfoIsPending && isVisible ? (
         <div className='w-full flex flex-col justify-center items-center'>
           <div className='w-4/5 flex items-center justify-between'>
             <h2 className='text-left text-4xl my-8 font-bold'>
@@ -98,11 +70,11 @@ export default function Page({ params }: { params: { id: string } }) {
               <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
                 Submissions
               </h3>
-              {submissions.map((submision) => (
+              {submissions.map((submission) => (
                 <SubmissionMini
-                  key={submision.id}
-                  {...submision}
-                  downloadedFileName={`${submision.user.name}_${submision.user.name}_${params.id}`}
+                  key={submission.id}
+                  {...submission}
+                  downloadedFileName={`${submission.user.name}_${submission.user.name}_${params.id}`}
                 />
               ))}
             </div>
@@ -110,20 +82,23 @@ export default function Page({ params }: { params: { id: string } }) {
           {loggedUserInfo?.roleId === STUDENT_ROLE_ID && (
             <>
               <div className='w-full items-center flex flex-col'>
-                {submissions.map((submision) => (
+                {submissions.map((submission) => (
                   <SubmissionMini
-                    key={submision.id}
-                    {...submision}
+                    key={submission.id}
+                    {...submission}
                     downloadedFileName={`Assignment_${params.id}`}
                   />
                 ))}
               </div>
               <Card className='p-10 my-10'>
-                <UpdateAssignment
-                  studentComment={submissions[0].studentComment}
-                  fileID={submissions[0].files[0]?.id ?? 0}
-                  submissionID={submissions[0].id}
-                />
+                {submissions[0] && (
+                  <UpdateAssignment
+                    studentComment={submissions[0].studentComment}
+                    fileID={submissions[0].files[0]?.id ?? 0}
+                    submissionID={submissions[0].id}
+                    queryKey='mySubmissions'
+                  />
+                )}
               </Card>
             </>
           )}
