@@ -85,7 +85,6 @@ const UpdateAssignment = ({
           files: form.getValues().requestFiles,
         });
       }
-      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
 
@@ -113,6 +112,7 @@ const UpdateAssignment = ({
     },
     onSuccess: async () => {
       onOpenChange?.(false);
+      queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
   });
 
