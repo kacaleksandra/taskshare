@@ -78,7 +78,10 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
               {visibility === false && <EyeOff />}
             </div>
             {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-              <div className='self-end' onClick={(e) => e.stopPropagation()}>
+              <div
+                className='flex flex-col gap-2 md:flex-row'
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Dialog open={isOpenEdit} onOpenChange={setIsOpenEdit}>
                   <DialogTrigger asChild>
                     <Button
@@ -99,7 +102,7 @@ const AssignmentMini: React.FC<AssignmentMiniProps> = ({
                   <DialogTrigger asChild>
                     <Button
                       variant={'destructive'}
-                      className='px-4'
+                      className='px-4 '
                       onClick={(e) => e.stopPropagation()}
                     >
                       Delete

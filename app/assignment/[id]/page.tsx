@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/app/_components/button';
 import { Card } from '@/app/_components/card';
 import Loader from '@/app/_components/loader';
 import { UseStoredUserInfo } from '@/app/_utils/zustand';
@@ -12,6 +13,7 @@ import UpdateAssignment from '../_submit/updateAssignment';
 import {
   AssignmentMiniProps,
   Submission,
+  downloadAllSubmissions,
   getAllSubmitions,
   getAssignmentInfo,
   getMySubmitions,
@@ -67,14 +69,27 @@ export default function Page({ params }: { params: { id: string } }) {
           </div>
           {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
             <div className='w-full items-center flex flex-col'>
-              <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
-                Submissions
-              </h3>
+              <div className='flex justify-between w-4/5 items-center'>
+                <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
+                  Submissions
+                </h3>
+                <Button
+                  onClick={() =>
+                    assignmentInfo &&
+                    downloadAllSubmissions(
+                      assignmentInfo.id,
+                      assignmentInfo.name,
+                    )
+                  }
+                >
+                  Download submissions
+                </Button>
+              </div>
               {submissions.map((submission) => (
                 <SubmissionMini
                   key={submission.id}
                   {...submission}
-                  downloadedFileName={`${submission.user.name}_${submission.user.name}_${params.id}`}
+                  downloadedFileName={`${submission.user.name}_${submission.user.lastname}_${params.id}`}
                 />
               ))}
             </div>

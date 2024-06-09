@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import EditCourse from '../_edit/edit-course';
 import {
   CourseFullInfo,
+  downloadAllFiles,
   getAllAssignments,
   getCourseInfo,
 } from './_api/client';
@@ -72,21 +73,31 @@ export default function Page({ params }: { params: { id: string } }) {
                 Assignments:
               </h3>
               {loggedUserInfo?.roleId === TEACHER_ROLE_ID && (
-                <Dialog
-                  open={isOpenAddAssignment}
-                  onOpenChange={setIsOpenAddAssignment}
-                >
-                  <DialogTrigger asChild>
-                    <Button variant={'outline'} className='px-8'>
-                      Create Assignment
-                    </Button>
-                  </DialogTrigger>
-                  <CreateAssignment
-                    courseId={params.id}
+                <div className='flex flex-col md:flex-row md:gap-4'>
+                  <Button
+                    className='mb-2'
+                    onClick={() =>
+                      downloadAllFiles(courseInfo.id, courseInfo.name)
+                    }
+                  >
+                    Download all files
+                  </Button>
+                  <Dialog
+                    open={isOpenAddAssignment}
                     onOpenChange={setIsOpenAddAssignment}
-                    queryKey='assignments'
-                  />
-                </Dialog>
+                  >
+                    <DialogTrigger asChild>
+                      <Button variant={'outline'} className='px-8'>
+                        Create Assignment
+                      </Button>
+                    </DialogTrigger>
+                    <CreateAssignment
+                      courseId={params.id}
+                      onOpenChange={setIsOpenAddAssignment}
+                      queryKey='assignments'
+                    />
+                  </Dialog>
+                </div>
               )}
             </div>
             {tasks.length === 0 && <p className='mt-8'>No assignments yet.</p>}
