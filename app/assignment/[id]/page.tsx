@@ -73,17 +73,19 @@ export default function Page({ params }: { params: { id: string } }) {
                 <h3 className='w-4/5 text-left text-2xl m-4 font-bold'>
                   Submissions
                 </h3>
-                <Button
-                  onClick={() =>
-                    assignmentInfo &&
-                    downloadAllSubmissions(
-                      assignmentInfo.id,
-                      assignmentInfo.name,
-                    )
-                  }
-                >
-                  Download submissions
-                </Button>
+                {submissions.length > 0 && (
+                  <Button
+                    onClick={() =>
+                      assignmentInfo &&
+                      downloadAllSubmissions(
+                        assignmentInfo.id,
+                        assignmentInfo.name,
+                      )
+                    }
+                  >
+                    Download submissions
+                  </Button>
+                )}
               </div>
               {submissions.map((submission) => (
                 <SubmissionMini

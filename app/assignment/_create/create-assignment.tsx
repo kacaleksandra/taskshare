@@ -55,6 +55,7 @@ function CreateAssignment({
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: [queryKey] });
       onOpenChange(false);
+      form.reset();
     },
   });
 
