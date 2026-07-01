@@ -1,5 +1,5 @@
 <h1 align="center">📚 TaskShare</h1>
-
+ 
 <p align="center">
   <img src="https://socialify.git.ci/kacaleksandra/taskshare/image?description=1&descriptionEditable=Empower%20your%20classroom%20with%20TaskShare!%20%F0%9F%9A%80&font=Inter&language=1&name=1&owner=1&pattern=Solid&pulls=1&theme=Dark" alt="TaskShare" width="640">
 </p>
